@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Handstand Analysis Results</h1>
+
+<div class="result {% if form_quality == 'good' %}good-form{% elif form_quality == 'bad' %}bad-form{% else %}error{% endif %}">
+    <h2>
+        {% if form_quality == 'good' %}
+            ✅ Excellent! Good Form Detected
+        {% elif form_quality == 'bad' %}
+            ⚠️ Banana Back Detected - Form Needs Work
+        {% else %}
+            ❓ Analysis Result
+        {% endif %}
+    </h2>
+    
+    <div style="font-size: 18px; font-weight: bold; text-transform: capitalize; margin: 15px 0;">
+        Classification: {{ analysis }}
+    </div>
+    
+    {% if form_quality == 'good' %}
+    <p>Your handstand shows a nice straight line from wrists through shoulders, hips, and ankles. Keep up the great work!</p>
+    {% elif form_quality == 'bad' %}
+    <p>The AI detected an arched back (banana back) in your handstand. This usually means your hips are pushed forward and your lower back is overarched.</p>
+    {% endif %}
+</div>
+
+<!-- Display the user's uploaded image -->
+<div style="text-align: center; margin: 30px 0;">
+    <h3 style="color: #333; margin-bottom: 15px;">📸 Your Handstand Photo</h3>
+    <img src="{{ url_for('uploaded_file', filename=uploaded_image) }}" alt="Your uploaded handstand" style="max-width: 100%; max-height: 400px; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: 3px solid #ddd;">
+</div>
+
+<!-- Show shocked banana image only for banana back form -->
+{% if form_quality == 'bad' %}
+<div style="text-align: center; margin: 30px 0;">
+    <img src="{{ url_for('static', filename='shocked_banana.jpg') }}" alt="Shocked banana reaction" style="max-width: 200px; height: auto; border-radius: 8px;">
+    <p style="font-weight: bold; color: #ff6b35; margin-top: 10px; font-size: 16px;">Fix Your Banana!!!</p>
+</div>
+{% endif %}
+
+<div style="text-align: center; margin: 30px 0;">
+    <img src="{{ url_for('static', filename='handstand_demo.jpg') }}" alt="Handstand form demonstration" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+    <p style="font-style: italic; color: #666; margin-top: 10px;">Example: Good form (left) vs Banana back (right)</p>
+</div>
+
+{% if form_quality == 'bad' %}
+<div style="margin-top: 20px; padding: 20px; background-color: #fff3cd; border-radius: 8px;">
+    <h3>🎯 Common "Banana Back" Fixes:</h3>
+    <ul>
+        <li><strong>Engage Your Core:</strong> Think about pulling your belly button toward your spine</li>
+        <li><strong>Posterior Pelvic Tilt:</strong> Tuck your tailbone under slightly</li>
+        <li><strong>Shoulder Position:</strong> Keep shoulders directly over your hands</li>
+        <li><strong>Look at Your Hands:</strong> Don't crane your neck forward</li>
+        <li><strong>Practice Hollow Body Holds:</strong> Build the core strength needed for straight alignment</li>
+    </ul>
+</div>
+{% endif %}
+
+<form action="/" method="get">
+    <button type="submit" class="back-btn">📷 Analyze Another Photo</button>
+</form>
+{% endblock %}
