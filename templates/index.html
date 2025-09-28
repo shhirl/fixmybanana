@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>🤸‍♂️ Handstand Posture Analyzer</h1>
+<p style="text-align: center; color: #666; margin-bottom: 30px;">
+    Upload a photo of your handstand and get instant feedback on your form!
+</p>
+
+<form action="/upload" method="post" enctype="multipart/form-data">
+    <div class="upload-area">
+        <h3>📸 Choose Your Handstand Photo</h3>
+        <p>Supported formats: PNG, JPG, JPEG, GIF</p>
+        <input type="file" name="file" accept="image/*" required>
+        <br>
+        <button type="submit">Analyze My Handstand</button>
+    </div>
+</form>
+
+<div style="margin-top: 40px; padding: 20px; background-color: #e9f7ef; border-radius: 8px;">
+    <h3>💡 Tips for Best Results:</h3>
+    <ul>
+        <li>Take photo from the side (profile view)</li>
+        <li>Make sure your whole body is visible</li>
+        <li>Good lighting helps with analysis</li>
+        <li>Clear, uncluttered background works best</li>
+    </ul>
+</div>
+{% endblock %}
