@@ -195,8 +195,13 @@
                         if (file.type.startsWith('image/')) {
                             const reader = new FileReader();
                             reader.onload = function(evt) {
-                                previewImg.src = evt.target.result;
+                                const dataUrl = evt.target.result;
+                                previewImg.src = dataUrl;
                                 imagePreview.style.display = 'flex';
+                                // Tile the uploaded image as the page background
+                                document.body.style.backgroundImage = `url(${dataUrl})`;
+                                document.body.style.backgroundRepeat = 'repeat';
+                                document.body.style.backgroundSize = '256px 256px';
                             };
                             reader.readAsDataURL(file);
                         }
@@ -234,8 +239,13 @@
 
                             const reader = new FileReader();
                             reader.onload = function(evt) {
-                                previewImg.src = evt.target.result;
+                                const dataUrl = evt.target.result;
+                                previewImg.src = dataUrl;
                                 imagePreview.style.display = 'flex';
+                                // Tile the uploaded image as the page background
+                                document.body.style.backgroundImage = `url(${dataUrl})`;
+                                document.body.style.backgroundRepeat = 'repeat';
+                                document.body.style.backgroundSize = '256px 256px';
                             };
                             reader.readAsDataURL(file);
                         } else {
