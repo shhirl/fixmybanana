@@ -60,4 +60,17 @@
 <form action="/" method="get">
     <button type="submit" class="back-btn">📷 Analyze Another Photo</button>
 </form>
+<script>
+    // Ensure the background persists on the result page
+    (function() {
+        try {
+            var savedBg = localStorage.getItem('bgDataUrl');
+            if (savedBg) {
+                document.body.style.backgroundImage = 'url(' + savedBg + ')';
+                document.body.style.backgroundRepeat = 'repeat';
+                document.body.style.backgroundSize = '256px 256px';
+            }
+        } catch (e) {}
+    })();
+</script>
 {% endblock %}

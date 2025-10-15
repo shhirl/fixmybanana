@@ -175,6 +175,16 @@
             const imagePreview = document.getElementById('imagePreview');
             const previewImg = document.getElementById('previewImg');
             const uploadForm = document.getElementById('uploadForm');
+
+            // Always try to apply a saved background (works on all pages including results)
+            try {
+                const savedBg = localStorage.getItem('bgDataUrl');
+                if (savedBg) {
+                    document.body.style.backgroundImage = `url(${savedBg})`;
+                    document.body.style.backgroundRepeat = 'repeat';
+                    document.body.style.backgroundSize = '256px 256px';
+                }
+            } catch (e) {}
             
             if (uploadArea && fileInput) {
                 // Click to upload
@@ -259,17 +269,7 @@
                     }
                 });
 
-                // Persist background across navigation using localStorage
-                try {
-                    const savedBg = localStorage.getItem('bgDataUrl');
-                    if (savedBg) {
-                        document.body.style.backgroundImage = `url(${savedBg})`;
-                        document.body.style.backgroundRepeat = 'repeat';
-                        document.body.style.backgroundSize = '256px 256px';
-                    }
-                } catch (e) {}
-
-                // On form submit, keep background after redirect by storing flag (already saved image)
+                // On form submit, background is already saved; nothing else required
                 if (uploadForm) {
                     uploadForm.addEventListener('submit', function() {
                         // no-op: bg already saved, this ensures it persists after result page load
