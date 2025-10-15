@@ -22,6 +22,12 @@
     <p>Your handstand shows a nice straight line from wrists through shoulders, hips, and ankles. Keep up the great work!</p>
     {% elif form_quality == 'bad' %}
     <p>The AI detected an arched back (banana back) in your handstand. This usually means your hips are pushed forward and your lower back is overarched.</p>
+    {% if detailed_feedback %}
+    <div style="margin-top: 15px; padding: 15px; background-color: #f8f9fa; border-left: 4px solid #ff6b35; border-radius: 4px;">
+        <h4 style="margin-top: 0; color: #333;">🤖 AI Analysis:</h4>
+        <p style="margin-bottom: 0; font-style: italic;">{{ detailed_feedback }}</p>
+    </div>
+    {% endif %}
     {% endif %}
 </div>
 
@@ -44,18 +50,6 @@
     <p style="font-style: italic; color: #666; margin-top: 10px;">Example: Good form (right) vs Banana back (left)</p>
 </div>
 
-{% if form_quality == 'bad' %}
-<div style="margin-top: 20px; padding: 20px; background-color: #fff3cd; border-radius: 8px;">
-    <h3>🎯 Common "Banana Back" Fixes:</h3>
-    <ul>
-        <li><strong>Engage Your Core:</strong> Think about pulling your belly button toward your spine</li>
-        <li><strong>Posterior Pelvic Tilt:</strong> Tuck your tailbone under slightly</li>
-        <li><strong>Shoulder Position:</strong> Keep shoulders directly over your hands</li>
-        <li><strong>Look at Your Hands:</strong> Don't crane your neck forward</li>
-        <li><strong>Practice Hollow Body Holds:</strong> Build the core strength needed for straight alignment</li>
-    </ul>
-</div>
-{% endif %}
 
 <form action="/" method="get">
     <button type="submit" class="back-btn">📷 Analyze Another Photo</button>
