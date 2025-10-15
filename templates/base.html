@@ -176,15 +176,7 @@
             const previewImg = document.getElementById('previewImg');
             const uploadForm = document.getElementById('uploadForm');
 
-            // Always try to apply a saved background (works on all pages including results)
-            try {
-                const savedBg = localStorage.getItem('bgDataUrl');
-                if (savedBg) {
-                    document.body.style.backgroundImage = `url(${savedBg})`;
-                    document.body.style.backgroundRepeat = 'repeat';
-                    document.body.style.backgroundSize = '256px 256px';
-                }
-            } catch (e) {}
+            // Home starts with default tiled background.
             
             if (uploadArea && fileInput) {
                 // Click to upload
