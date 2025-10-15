@@ -23,6 +23,64 @@ def encode_image_to_base64(image_path):
     with open(image_path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode('utf-8')
 
+def get_banana_back_feedback(base64_image, api_key, model_name):
+    """
+    Get detailed feedback explaining why a handstand is classified as banana back
+    """
+    try:
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}"
+        }
+        
+        payload = {
+            "model": model_name,
+            "temperature": 0.3,
+            "messages": [
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a handstand coach providing detailed feedback. "
+                        "Analyze the handstand image and explain specifically why it shows 'banana back' form. "
+                        "Focus on: spinal alignment, hip position, shoulder position, and overall body line. "
+                        "Provide constructive, specific feedback in 2-3 sentences."
+                    )
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": (
+                                "This handstand has been classified as 'banana back'. "
+                                "Please analyze the image and explain specifically why this is banana back form. "
+                                "What do you see in terms of spinal alignment, hip position, and overall body line?"
+                            )
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{base64_image}"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "max_tokens": 200
+        }
+        
+        response = requests.post("https://api.openai.com/v1/chat/completions", 
+                               headers=headers, json=payload, timeout=30)
+        
+        if response.status_code == 200:
+            result = response.json()
+            return result['choices'][0]['message']['content'].strip()
+        else:
+            return "Unable to generate detailed feedback at this time."
+            
+    except Exception as e:
+        return f"Error generating feedback: {str(e)}"
+
 def analyze_handstand_posture(image_path):
     """
     Analyze handstand posture using OpenAI's vision model
@@ -32,7 +90,8 @@ def analyze_handstand_posture(image_path):
     if not api_key:
         return {
             'analysis': 'Error: OpenAI API key not found. Please set OPENAI_API_KEY environment variable.',
-            'form_quality': 'error'
+            'form_quality': 'error',
+            'detailed_feedback': None
         }
     
     # Test API key works
@@ -42,12 +101,14 @@ def analyze_handstand_posture(image_path):
         if test_response.status_code != 200:
             return {
                 'analysis': f'API key validation failed: {test_response.status_code}',
-                'form_quality': 'error'
+                'form_quality': 'error',
+                'detailed_feedback': None
             }
     except Exception as e:
         return {
             'analysis': f'API connection test failed: {str(e)}',
-            'form_quality': 'error'
+            'form_quality': 'error',
+            'detailed_feedback': None
         }
     
     try:
@@ -142,31 +203,48 @@ def analyze_handstand_posture(image_path):
                 # Determine form quality based on response
                 if "good form" in analysis_text:
                     form_quality = "good"
+                    return {
+                        'analysis': analysis_text,
+                        'form_quality': form_quality,
+                        'detailed_feedback': None
+                    }
                 elif "banana back" in analysis_text:
                     form_quality = "bad"
+                    
+                    # Get detailed feedback for banana back
+                    detailed_feedback = get_banana_back_feedback(base64_image, api_key, model_name)
+                    
+                    return {
+                        'analysis': analysis_text,
+                        'form_quality': form_quality,
+                        'detailed_feedback': detailed_feedback
+                    }
                 else:
                     form_quality = "unclear"
-                    
-                return {
-                    'analysis': analysis_text,
-                    'form_quality': form_quality
-                }
+                    return {
+                        'analysis': analysis_text,
+                        'form_quality': form_quality,
+                        'detailed_feedback': None
+                    }
             # If this model fails, try the next one
         # If we get here, all models failed
         return {
             'analysis': 'All vision models failed. Please try again.',
-            'form_quality': 'error'
+            'form_quality': 'error',
+            'detailed_feedback': None
         }
         
     except requests.exceptions.RequestException as e:
         return {
             'analysis': f'API request error: {str(e)}',
-            'form_quality': 'error'
+            'form_quality': 'error',
+            'detailed_feedback': None
         }
     except Exception as e:
         return {
             'analysis': f'Error analyzing image: {str(e)}',
-            'form_quality': 'error'
+            'form_quality': 'error',
+            'detailed_feedback': None
         }
 
 @app.route('/')
@@ -197,6 +275,7 @@ def upload_file():
         return render_template('result.html', 
                              analysis=analysis_result['analysis'],
                              form_quality=analysis_result['form_quality'],
+                             detailed_feedback=analysis_result.get('detailed_feedback'),
                              uploaded_image=filename
                              )
     
