@@ -10,7 +10,9 @@
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            background: linear-gradient(180deg, #f7f7fb 0%, #eef1f8 100%);
+            background-image: url("{{ url_for('static', filename='banana_background.jpg') }}");
+            background-repeat: repeat;
+            background-size: 256px 256px;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
@@ -172,6 +174,7 @@
             const analyzeBtn = document.getElementById('analyzeBtn');
             const imagePreview = document.getElementById('imagePreview');
             const previewImg = document.getElementById('previewImg');
+            const uploadForm = document.getElementById('uploadForm');
             
             if (uploadArea && fileInput) {
                 // Click to upload
@@ -202,6 +205,7 @@
                                 document.body.style.backgroundImage = `url(${dataUrl})`;
                                 document.body.style.backgroundRepeat = 'repeat';
                                 document.body.style.backgroundSize = '256px 256px';
+                                try { localStorage.setItem('bgDataUrl', dataUrl); } catch (e) {}
                             };
                             reader.readAsDataURL(file);
                         }
@@ -246,6 +250,7 @@
                                 document.body.style.backgroundImage = `url(${dataUrl})`;
                                 document.body.style.backgroundRepeat = 'repeat';
                                 document.body.style.backgroundSize = '256px 256px';
+                                try { localStorage.setItem('bgDataUrl', dataUrl); } catch (e) {}
                             };
                             reader.readAsDataURL(file);
                         } else {
@@ -253,6 +258,23 @@
                         }
                     }
                 });
+
+                // Persist background across navigation using localStorage
+                try {
+                    const savedBg = localStorage.getItem('bgDataUrl');
+                    if (savedBg) {
+                        document.body.style.backgroundImage = `url(${savedBg})`;
+                        document.body.style.backgroundRepeat = 'repeat';
+                        document.body.style.backgroundSize = '256px 256px';
+                    }
+                } catch (e) {}
+
+                // On form submit, keep background after redirect by storing flag (already saved image)
+                if (uploadForm) {
+                    uploadForm.addEventListener('submit', function() {
+                        // no-op: bg already saved, this ensures it persists after result page load
+                    });
+                }
             }
         });
     </script>
