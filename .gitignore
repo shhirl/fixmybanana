@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Local env / secrets
+.env
+.env.*
+
+# User-generated data (do NOT commit — contains user emails / uploads)
+feedback.jsonl
+uploads/
+
+# OS
+.DS_Store
