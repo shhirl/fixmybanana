@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% if feedback_submitted %}
+<div class="feedback-thanks">
+    Thanks for the note — I read every one. 🍌
+</div>
+{% endif %}
 <h1>🍌 Are You Going Bananas? 🍌</h1>
 <p style="text-align: center; color: #666; margin-bottom: 30px;">
     The Banana Handstand Detector
@@ -44,4 +49,30 @@
         💡 <strong>For the most accurate rating:</strong> Good lighting and a clear background help our AI give you the best analysis. Side view works best; make sure your whole body is visible
     </p>
 </div>
+
+<section class="feedback-section" id="feedback">
+    <h2>Loved it? Got ideas? 🍌</h2>
+    <p class="feedback-blurb">
+        Tell me what worked, what didn't, or what I should build next. Leave your email too if you want to know when the next weird little tool is ready.
+    </p>
+    <form action="/feedback" method="post" class="feedback-form">
+        <label for="feedback-message" class="visually-hidden">Your feedback</label>
+        <textarea
+            id="feedback-message"
+            name="message"
+            rows="5"
+            placeholder="What's on your mind?"
+            required
+        ></textarea>
+        <label for="feedback-email" class="visually-hidden">Your email</label>
+        <input
+            id="feedback-email"
+            type="email"
+            name="email"
+            placeholder="your@email.com"
+            required
+        />
+        <button type="submit">Send it</button>
+    </form>
+</section>
 {% endblock %}
