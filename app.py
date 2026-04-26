@@ -4,7 +4,6 @@ import base64
 from werkzeug.utils import secure_filename
 import requests
 import json
-from datetime import datetime, timezone
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -248,31 +247,10 @@ def analyze_handstand_posture(image_path):
             'detailed_feedback': None
         }
 
-FEEDBACK_FILE = 'feedback.jsonl'
-
 @app.route('/')
 def index():
     feedback_submitted = request.args.get('submitted') == '1'
     return render_template('index.html', feedback_submitted=feedback_submitted)
-
-@app.route('/feedback', methods=['POST'])
-def submit_feedback():
-    message = (request.form.get('message') or '').strip()
-    email = (request.form.get('email') or '').strip()
-
-    if not message or not email:
-        return redirect(url_for('index') + '#feedback')
-
-    entry = {
-        'timestamp': datetime.now(timezone.utc).isoformat(),
-        'email': email[:200],
-        'message': message[:5000],
-    }
-
-    with open(FEEDBACK_FILE, 'a', encoding='utf-8') as f:
-        f.write(json.dumps(entry) + '\n')
-
-    return redirect(url_for('index') + '?submitted=1#feedback')
 
 @app.route('/upload', methods=['POST'])
 def upload_file():

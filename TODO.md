@@ -17,8 +17,8 @@ Living doc. Add new items at the top of each section. Move done items to "Done" 
 - [ ] **Filename collision risk in `uploads/`.**
   `secure_filename()` keeps the original name, so two users uploading `handstand.jpg` overwrite each other. Fix when implementing persistent storage above — prefix with UTC timestamp + short random suffix.
 
-- [ ] **Feedback inbox.**
-  `feedback.jsonl` is local-only and not committed. On Railway it'll be wiped on redeploy. Decide: (a) email-on-submit via SendGrid/Resend, (b) write to same persistent store as uploads, or (c) post to a Slack/Discord webhook. (c) is the lowest-effort "actually see it" option.
+- [ ] **Watch the Formspree free-tier cap (50 submissions/month).**
+  If a tweet/post sends a spike, submissions past 50 in a calendar month are rejected by Formspree until reset. Either upgrade ($10/mo for 1k) or swap to Resend (3k/mo free). Submissions past the cap are LOST, not queued.
 
 ## Ideas / maybe
 
@@ -28,15 +28,18 @@ Living doc. Add new items at the top of each section. Move done items to "Done" 
 
 ## Decisions made
 
-- **2026-04-26 — Feedback form is a plain HTML POST, not AJAX.**
-  Reason: simpler, works without JS, matches the existing form pattern (`/upload`). Trade-off: full page reload on submit, but the redirect with `?submitted=1#feedback` lands the user back at the section with a thank-you banner, which feels fine for a low-frequency action.
+- **2026-04-26 — GitHub auth via `gh` CLI (HTTPS), not SSH host aliases.**
+  Two accounts (`shhirl`, `shirleysbot`) both stored in `gh` keyring. `gh auth setup-git` wires git's HTTPS credentials through `gh`, so the *currently active* `gh` account is the one `git push` uses.
+  Switch with `gh auth switch -u shhirl` or `gh auth switch -u shirleysbot`.
+  Trade-off: it's global state — easy to forget which account is active. If that bites, revisit `includeIf` in `~/.gitconfig` to auto-pick identity by folder, and/or per-account SSH keys with `~/.ssh/config` host aliases.
+  This repo also has `git config --local user.name/email` set to shhirl so commit author can't drift even if `gh` is on the wrong account.
 
-- **2026-04-26 — Feedback stored as JSON Lines (`feedback.jsonl`), not a DB.**
-  Reason: zero setup, easy to grep/cat. Will migrate to the same store as uploads when that decision is made (see "Persistent storage" above).
-
-- **2026-04-26 — `feedback.jsonl` and `uploads/` are gitignored.**
-  Reason: contains user emails and uploaded photos — never goes in the repo.
+- **2026-04-26 — Feedback handled by Formspree (form ID `mqewoaln`), not our backend.**
+  Why: zero backend code, built-in spam protection, free tier (50/mo) covers current scale, and submissions land directly in shirley.he09@gmail.com without us touching Railway's ephemeral filesystem. Formspree dashboard doubles as a searchable archive.
+  How to apply: the homepage feedback `<form>` posts to `https://formspree.io/f/mqewoaln`. Don't add a backend `/feedback` route — it would just duplicate Formspree. If we ever need to *process* submissions programmatically (auto-tag, run AI on them, etc.), revisit Resend or a backend route. The earlier Resend-vs-webhook-vs-Formspree analysis is in chat history if needed.
+  Also: hidden `_next` field redirects back to `/?submitted=1#feedback` so the existing thank-you banner still fires; `_subject` makes the Gmail subject line scannable; `_gotcha` honeypot adds a free spam layer on top of Formspree's built-in.
 
 ## Done
 
-- **2026-04-26** — Added feedback section to homepage (textarea + required email), `/feedback` POST route, thank-you banner on redirect, `.gitignore` for user data.
+- **2026-04-26** — Swapped feedback handling to Formspree. Removed the `/feedback` Flask route, `FEEDBACK_FILE` constant, datetime import, and `feedback.jsonl` from `.gitignore`. Form now posts directly to `https://formspree.io/f/mqewoaln` with `_next`/`_subject`/`_gotcha` hidden fields. Added `maxlength="5000"` on the textarea so users see the limit instead of having it silently truncated server-side.
+- **2026-04-26** — Added feedback section to homepage (textarea + required email), `/feedback` POST route, thank-you banner on redirect, `.gitignore` for user data. *(Superseded by Formspree swap above — the route is gone, but the section/UX remains.)*
