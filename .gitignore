@@ -9,8 +9,7 @@ venv/
 .env
 .env.*
 
-# User-generated data (do NOT commit — contains user emails / uploads)
-feedback.jsonl
+# User-generated data (do NOT commit)
 uploads/
 
 # OS
