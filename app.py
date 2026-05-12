@@ -2,12 +2,27 @@ from flask import Flask, request, render_template, jsonify, redirect, url_for, s
 import os
 import base64
 from werkzeug.utils import secure_filename
+from werkzeug.middleware.proxy_fix import ProxyFix
 import requests
 import json
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
+
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per hour"],
+    storage_uri="memory://",
+)
+
+@app.errorhandler(429)
+def ratelimit_handler(e):
+    return render_template('429.html', limit_description=str(e.description)), 429
 
 # Create uploads directory if it doesn't exist
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -253,6 +268,8 @@ def index():
     return render_template('index.html', feedback_submitted=feedback_submitted)
 
 @app.route('/upload', methods=['POST'])
+@limiter.limit("5 per day")
+@limiter.limit("50 per day", key_func=lambda: "global_upload")
 def upload_file():
     if 'file' not in request.files:
         return redirect(request.url)
