@@ -23,8 +23,8 @@ Living doc. Add new items at the top of each section. Move done items to "Done" 
 ## Ideas / maybe
 
 - [ ] Show a tiny "you're submission #N" counter on the result page — light social proof.
-- [ ] Rate-limit `/upload` and `/feedback` (basic per-IP) before this gets discovered by anyone weird.
 - [ ] Mobile camera capture: `<input type="file" accept="image/*" capture="environment">` so phone users go straight to camera.
+- [ ] If rate-limiter memory backend becomes a problem (e.g., users hitting limits mid-session after a Railway redeploy), swap `storage_uri="memory://"` to Redis. Railway has a Redis plugin.
 
 ## Decisions made
 
@@ -41,5 +41,6 @@ Living doc. Add new items at the top of each section. Move done items to "Done" 
 
 ## Done
 
+- **2026-05-12** — Rate-limited `/upload` to 5/day per IP + 50/day globally via `Flask-Limiter`. Belt-and-suspenders with the OpenAI hard cap ($20/day) set in the OpenAI billing dashboard. ProxyFix wraps the WSGI app so Railway's edge proxy doesn't make every request look like one IP. Custom 429 template matches the banana aesthetic. In-memory storage backend (resets on redeploy — fine for now).
 - **2026-04-26** — Swapped feedback handling to Formspree. Removed the `/feedback` Flask route, `FEEDBACK_FILE` constant, datetime import, and `feedback.jsonl` from `.gitignore`. Form now posts directly to `https://formspree.io/f/mqewoaln` with `_next`/`_subject`/`_gotcha` hidden fields. Added `maxlength="5000"` on the textarea so users see the limit instead of having it silently truncated server-side.
 - **2026-04-26** — Added feedback section to homepage (textarea + required email), `/feedback` POST route, thank-you banner on redirect, `.gitignore` for user data. *(Superseded by Formspree swap above — the route is gone, but the section/UX remains.)*
