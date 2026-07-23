@@ -6,6 +6,9 @@ Living doc. Add new items at the top of each section. Move done items to "Done" 
 
 ## Now / next
 
+- [ ] **Merge PR #7** (`dedupe-footer-link`) — removes the redundant whirleyworld.com footer link ("Built by Shirley He" already links there). One-line change; merging deploys it.
+- [ ] **Phone-test the share card on the live site.** Upload a photo → tap "Share it" → native share sheet should open with the score-card PNG attached. Desktop should download the PNG + copy share text. (Client-side JS — never manually tested; costs one OpenAI call + one of the 5/day rate-limit slots.)
+- [ ] **Optional safety upgrades discussed 2026-07-23:** smoke test as `test_app.py` + GitHub Action (checks: app imports, `GET /` is 200, all templates render, purge deletes >24h files), branch protection requiring it, and Railway PR preview environments (Railway settings → Environments).
 - [ ] **Record demo GIF for the README.** QuickTime or Kap → record the upload→result flow → export GIF → save as `static/demo.gif` → uncomment the image tag in README.md.
 - [ ] **Pin the repo on GitHub.** Manual step (no API for profile pins): github.com/shhirl → "Customize your pins" on the profile page → check fixmybanana.
 
