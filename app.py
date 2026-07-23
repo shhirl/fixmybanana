@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, jsonify, redirect, url_for, send_from_directory
 import os
 import base64
+import time
 from werkzeug.utils import secure_filename
 from werkzeug.middleware.proxy_fix import ProxyFix
 import requests
@@ -32,6 +33,17 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def purge_old_uploads(max_age_hours=24):
+    """Delete uploaded photos older than max_age_hours, backing the privacy promise on the homepage."""
+    cutoff = time.time() - max_age_hours * 3600
+    for name in os.listdir(app.config['UPLOAD_FOLDER']):
+        path = os.path.join(app.config['UPLOAD_FOLDER'], name)
+        try:
+            if os.path.isfile(path) and os.path.getmtime(path) < cutoff:
+                os.remove(path)
+        except OSError:
+            pass
 
 def encode_image_to_base64(image_path):
     """Convert image to base64 string"""
@@ -280,6 +292,7 @@ def upload_file():
         return redirect(request.url)
     
     if file and allowed_file(file.filename):
+        purge_old_uploads()
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(filepath)

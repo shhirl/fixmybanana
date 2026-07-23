@@ -34,8 +34,18 @@
 <!-- Display the user's uploaded image -->
 <div style="text-align: center; margin: 30px 0;">
     <h3 style="color: #333; margin-bottom: 15px;">📸 Your Handstand Photo</h3>
-    <img src="{{ url_for('uploaded_file', filename=uploaded_image) }}" alt="Your uploaded handstand" style="max-width: 100%; max-height: 400px; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: 3px solid #ddd;">
+    <img id="resultPhoto" src="{{ url_for('uploaded_file', filename=uploaded_image) }}" alt="Your uploaded handstand" style="max-width: 100%; max-height: 400px; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: 3px solid #ddd;">
 </div>
+
+{% if form_quality in ['good', 'bad'] %}
+<div class="share-section">
+    <p class="share-title">📣 Share your banana score</p>
+    <div class="share-buttons">
+        <button type="button" id="shareBtn" data-quality="{{ form_quality }}">Share it</button>
+        <button type="button" id="downloadBtn">Download score card</button>
+    </div>
+</div>
+{% endif %}
 
 <!-- Show shocked banana image only for banana back form -->
 {% if form_quality == 'bad' %}
@@ -65,6 +75,110 @@
                 document.body.style.backgroundSize = '256px 256px';
             }
         } catch (e) {}
+    })();
+
+    // Shareable banana score card
+    (function() {
+        var shareBtn = document.getElementById('shareBtn');
+        var downloadBtn = document.getElementById('downloadBtn');
+        if (!shareBtn || !downloadBtn) return;
+
+        var isBanana = shareBtn.dataset.quality === 'bad';
+        var photo = document.getElementById('resultPhoto');
+        var siteUrl = 'https://www.fixmybanana.com';
+        var shareText = isBanana
+            ? 'My handstand is 100% banana 🍌 Get your banana score at ' + siteUrl
+            : 'My handstand is 0% banana ✅ Think you can match it? ' + siteUrl;
+
+        function whenPhotoReady() {
+            return new Promise(function(resolve) {
+                if (!photo) return resolve(null);
+                if (photo.complete && photo.naturalWidth) return resolve(photo);
+                photo.onload = function() { resolve(photo); };
+                photo.onerror = function() { resolve(null); };
+            });
+        }
+
+        function buildCard() {
+            return whenPhotoReady().then(function(img) {
+                var size = 1080;
+                var canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                var ctx = canvas.getContext('2d');
+                var font = '-apple-system, "Segoe UI", Roboto, Arial, sans-serif';
+
+                var grad = ctx.createLinearGradient(0, 0, 0, size);
+                grad.addColorStop(0, '#ffe45c');
+                grad.addColorStop(1, '#ffc300');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, size, size);
+
+                ctx.textAlign = 'center';
+                ctx.fillStyle = '#1f2330';
+                ctx.font = '800 68px ' + font;
+                ctx.fillText(isBanana ? '🍌 BANANA ALERT! 🍌' : '✅ SOLID FORM ✅', size / 2, 120);
+                ctx.font = '700 44px ' + font;
+                ctx.fillText('Banana score: ' + (isBanana ? '100%' : '0%') + ' banana', size / 2, 190);
+
+                var frame = { x: 165, y: 240, w: 750, h: 620 };
+                ctx.fillStyle = '#ffffff';
+                if (ctx.roundRect) {
+                    ctx.beginPath();
+                    ctx.roundRect(frame.x, frame.y, frame.w, frame.h, 24);
+                    ctx.fill();
+                } else {
+                    ctx.fillRect(frame.x, frame.y, frame.w, frame.h);
+                }
+                if (img) {
+                    var pad = 20;
+                    var scale = Math.min((frame.w - pad * 2) / img.naturalWidth, (frame.h - pad * 2) / img.naturalHeight);
+                    var w = img.naturalWidth * scale;
+                    var h = img.naturalHeight * scale;
+                    ctx.drawImage(img, frame.x + (frame.w - w) / 2, frame.y + (frame.h - h) / 2, w, h);
+                }
+
+                ctx.fillStyle = '#1f2330';
+                ctx.font = '600 40px ' + font;
+                ctx.fillText('Is YOUR handstand secretly a banana?', size / 2, 950);
+                ctx.font = '800 52px ' + font;
+                ctx.fillText('fixmybanana.com', size / 2, 1020);
+
+                return new Promise(function(resolve) {
+                    canvas.toBlob(resolve, 'image/png');
+                });
+            });
+        }
+
+        function downloadBlob(blob) {
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'banana-score.png';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+        }
+
+        shareBtn.addEventListener('click', function() {
+            buildCard().then(function(blob) {
+                var file = blob && new File([blob], 'banana-score.png', { type: 'image/png' });
+                if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+                    navigator.share({ files: [file], text: shareText }).catch(function() {});
+                } else if (navigator.share) {
+                    navigator.share({ text: shareText, url: siteUrl }).catch(function() {});
+                } else if (blob) {
+                    downloadBlob(blob);
+                    if (navigator.clipboard) navigator.clipboard.writeText(shareText).catch(function() {});
+                    alert('Score card downloaded — share text copied to your clipboard!');
+                }
+            });
+        });
+
+        downloadBtn.addEventListener('click', function() {
+            buildCard().then(function(blob) { if (blob) downloadBlob(blob); });
+        });
     })();
 </script>
 {% endblock %}
