@@ -215,6 +215,56 @@
             text-align: center;
             font-weight: 600;
         }
+        .privacy-note {
+            text-align: center;
+            font-size: 13px;
+            color: #6b7280;
+            margin: 14px 0 0;
+        }
+        .share-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: linear-gradient(180deg, #fffef7, #fff8e1);
+            border: 2px solid #ffd700;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .share-title {
+            font-weight: 800;
+            font-size: 18px;
+            color: #1f2330;
+            margin: 0 0 14px;
+        }
+        .share-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .share-buttons button {
+            flex: 1 1 200px;
+            width: auto;
+        }
+        .site-footer {
+            margin: 24px auto 8px;
+            padding: 14px 20px;
+            text-align: center;
+            background-color: rgba(255,255,255,0.92);
+            border-radius: 12px;
+            font-size: 14px;
+            color: #6b7280;
+            box-shadow: 0 4px 14px rgba(18,23,35,0.06);
+        }
+        .site-footer p {
+            margin: 0 0 4px;
+        }
+        .site-footer a {
+            color: #5a34e6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .site-footer a:hover {
+            text-decoration: underline;
+        }
         .visually-hidden {
             position: absolute;
             width: 1px;
@@ -232,7 +282,17 @@
     <div class="container">
         {% block content %}{% endblock %}
     </div>
-    
+
+    <footer class="site-footer">
+        <p>Built by <a href="https://www.whirleyworld.com" target="_blank" rel="noopener">Shirley He</a></p>
+        <nav>
+            <a href="https://www.linkedin.com/in/shhirl" target="_blank" rel="noopener">LinkedIn</a> ·
+            <a href="https://www.instagram.com/shirleywhirlhe" target="_blank" rel="noopener">Instagram</a> ·
+            <a href="https://github.com/shhirl" target="_blank" rel="noopener">GitHub</a> ·
+            <a href="https://www.whirleyworld.com" target="_blank" rel="noopener">whirleyworld.com</a>
+        </nav>
+    </footer>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const uploadArea = document.getElementById('uploadArea');

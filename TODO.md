@@ -6,7 +6,11 @@ Living doc. Add new items at the top of each section. Move done items to "Done" 
 
 ## Now / next
 
+- [ ] **Record demo GIF for the README.** QuickTime or Kap → record the upload→result flow → export GIF → save as `static/demo.gif` → uncomment the image tag in README.md.
+- [ ] **Pin the repo on GitHub.** Manual step (no API for profile pins): github.com/shhirl → "Customize your pins" on the profile page → check fixmybanana.
+
 - [ ] **Persistent storage for uploaded images + analysis results.**
+  *2026-07-23 note:* uploads now auto-purge after 24h (privacy promise on homepage). If you later pick S3/R2 or a Railway Volume here, either drop the purge or update the homepage privacy note to match.
   Today: images save to local `uploads/` (ephemeral on Railway — wiped on every redeploy). No metadata, no log of who uploaded what.
   Pick one path:
   - **S3 / Cloudflare R2** (cheap, durable, signed URLs for serving back)
@@ -28,6 +32,14 @@ Living doc. Add new items at the top of each section. Move done items to "Done" 
 
 ## Decisions made
 
+- **2026-07-23 — Branch + PR for behavior changes; direct-to-main only for docs.**
+  Why: Railway auto-deploys every push to `main`, so `git push` = "deploy to live site." The healthcheck (`/`) catches boot failures but not 200-but-broken bugs (template/JS breakage). A PR is the deliberate "ready to be live?" checkpoint and keeps main always-deployable.
+  How to apply:
+  - Touching `app.py` or `templates/` → work on a short-lived branch, open a PR, merge = conscious deploy.
+  - README/TODO/typos → direct to main is fine.
+  - Something broke anyway → Railway dashboard → roll back to previous deploy (one click).
+  - Nice-to-haves not yet done: Railway PR preview environments (Settings → Environments), smoke-test CI (`test_app.py` + GitHub Action) + branch protection.
+
 - **2026-04-26 — GitHub auth via `gh` CLI (HTTPS), not SSH host aliases.**
   Two accounts (`shhirl`, `shirleysbot`) both stored in `gh` keyring. `gh auth setup-git` wires git's HTTPS credentials through `gh`, so the *currently active* `gh` account is the one `git push` uses.
   Switch with `gh auth switch -u shhirl` or `gh auth switch -u shirleysbot`.
@@ -41,6 +53,7 @@ Living doc. Add new items at the top of each section. Move done items to "Done" 
 
 ## Done
 
+- **2026-07-23** — Brand + viral-loop pass: (1) footer on every page — "Built by Shirley He" linking to LinkedIn (`/in/shhirl`), Instagram (`@shirleywhirlhe`), GitHub (`shhirl`), and whirleyworld.com; (2) one-line privacy note on homepage, backed by a real `purge_old_uploads()` that deletes uploads older than 24h on each new upload; (3) shareable banana score card on the result page — canvas-rendered 1080×1080 PNG (verdict + user photo + fixmybanana.com), Web Share API with file support on mobile, download + clipboard fallback on desktop; (4) README rewritten with live link, stack, privacy section, and a commented-out demo-GIF slot.
 - **2026-05-12** — Rate-limited `/upload` to 5/day per IP + 50/day globally via `Flask-Limiter`. Belt-and-suspenders with the OpenAI hard cap ($20/day) set in the OpenAI billing dashboard. ProxyFix wraps the WSGI app so Railway's edge proxy doesn't make every request look like one IP. Custom 429 template matches the banana aesthetic. In-memory storage backend (resets on redeploy — fine for now).
 - **2026-04-26** — Swapped feedback handling to Formspree. Removed the `/feedback` Flask route, `FEEDBACK_FILE` constant, datetime import, and `feedback.jsonl` from `.gitignore`. Form now posts directly to `https://formspree.io/f/mqewoaln` with `_next`/`_subject`/`_gotcha` hidden fields. Added `maxlength="5000"` on the textarea so users see the limit instead of having it silently truncated server-side.
 - **2026-04-26** — Added feedback section to homepage (textarea + required email), `/feedback` POST route, thank-you banner on redirect, `.gitignore` for user data. *(Superseded by Formspree swap above — the route is gone, but the section/UX remains.)*
