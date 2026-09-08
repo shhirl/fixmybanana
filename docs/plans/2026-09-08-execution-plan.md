@@ -37,13 +37,13 @@ Eval-plan "immediate to-dos" status: screenshots ✅ (`docs/screenshots/2026-09-
 - [x] Test set collected (54 files, see `eval/testset/README.md` §6). Shirley: review + label. Original brief: collect 30–50 photos along the axes — **full instructions in `eval/testset/README.md`** (axes, counts, naming, labelling rules, privacy) (freestanding/wall, side/front, mirror, poor lighting, not-a-handstand controls) into `eval/testset/`, fill `labels.csv`. Decide whether to publish the photos or a sample (privacy of people in them).
 
 ### 2c. Run v0 eval + error analysis
-- [ ] Run `run_eval.py --version v0 --runs 5`, commit `eval/results/v0.csv`.
-- [ ] `eval/results/v0-analysis.md`: pass rate, ±1-banana agreement, per-photo spread across 5 runs, failure taxonomy with counts. Read every failure before writing metrics.
+- [x] Run `run_eval.py --version v0 --runs 5`, commit `eval/results/v0.csv`. (270 analyses, $1.24, in PR #9)
+- [x] `eval/results/v0-summary.md` + `v0-taxonomy.json` (6 failure modes with counts) — was planned as `v0-analysis.md`: pass rate, ±1-banana agreement, per-photo spread across 5 runs, failure taxonomy with counts. Read every failure before writing metrics.
 - [ ] Optional: `eval/summarize.py` computes those numbers from the CSV so later versions reuse it.
 
 ### 2d. The page (branch `how-its-built`; visual → before/after screenshots + tag)
-- [ ] `app.py`: `GET /how-its-built` → `templates/how_its_built.html` (extends `base.html`; same card + banana background + footer).
-- [ ] Page content: short intro; `#v0` block (what/why, prompt screenshot or snippet, eval table, cost/analysis); `#v2` block (test set design, labelling, taxonomy, the "same photo, five scores" chart); "Not done / next" list from the eval plan §4; link to the GitHub repo.
+- [x] (PR #9) `app.py`: `GET /how-its-built` → `templates/how_its_built.html` (extends `base.html`; same card + banana background + footer).
+- [x] (PR #9) Page content: short intro; `#v0` block (what/why, prompt screenshot or snippet, eval table, cost/analysis); `#v2` block (test set design, labelling, taxonomy, the "same photo, five scores" chart); "Not done / next" list from the eval plan §4; link to the GitHub repo.
 - [ ] Separate tiny PR `nav-link-how-its-built`: header link "How it's built" on every page + one line under the result card: "Evaluated on N photos · agrees with me X% · see how" (numbers read from `eval/results/` or hard-coded constants in one place).
 - [ ] Verify: all templates render, `GET /how-its-built` 200, mobile check, screenshots before/after, PR → merge → tag `look-YYYY-MM-DD-how-its-built`.
 - [ ] Shirley: whirleyworld.com project card → `/how-its-built`; LinkedIn post with one honest number.
