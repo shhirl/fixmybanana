@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How it's built — fixmybanana.com</title>
+<meta name="description" content="How the banana handstand detector is evaluated: a fixed test set, hand labels, five runs per photo, the numbers published even when they're bad.">
+<style>
+  body{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;max-width:720px;margin:0 auto;padding:40px 22px 60px;background:#fbfaf7;color:#1a1a1a;-webkit-font-smoothing:antialiased;line-height:1.6}
+  .sans{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Arial,sans-serif}
+  a{color:#1a1a1a}
+  .top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-bottom:1px solid #e5e2da;padding-bottom:12px;margin-bottom:36px;font-family:-apple-system,Inter,Arial,sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+  .vnav{display:flex;gap:16px;flex-wrap:wrap}.vnav a{text-decoration:none;border-bottom:2px solid #f5b800;padding-bottom:2px}.vnav span{color:#a8a49c}
+  .tool{text-decoration:none;font-weight:600}
+  .kicker{font-family:-apple-system,Inter,Arial,sans-serif;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#7a7568;margin:0}
+  h1{font-weight:500;font-size:38px;line-height:1.15;margin:10px 0 16px;letter-spacing:-.01em}
+  .lede{font-size:18px;color:#3d3a33}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);margin:30px 0;border-top:1px solid #1a1a1a;border-bottom:1px solid #e5e2da}
+  .stat{padding:14px 10px 12px;border-right:1px solid #e5e2da}.stat:last-child{border-right:0}
+  .stat b{display:block;font-size:28px;font-weight:500;letter-spacing:-.02em}.stat span{font-family:-apple-system,Inter,Arial,sans-serif;font-size:11.5px;color:#7a7568;line-height:1.3;display:block}
+  section{margin-top:52px}
+  .vtag{font-family:-apple-system,Inter,Arial,sans-serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;border-left:3px solid #f5b800;padding-left:10px}.vtag span{color:#7a7568;margin-left:10px;text-transform:none;letter-spacing:0}
+  .vtag.soon{border-color:#e5e2da;color:#a8a49c}
+  h2{font-weight:500;font-size:27px;margin:10px 0 12px;letter-spacing:-.01em}
+  h3{font-family:-apple-system,Inter,Arial,sans-serif;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:#7a7568;margin:28px 0 10px}
+  p,li{font-size:16.5px}
+  figure{margin:22px 0}figure img{width:100%;border:1px solid #e5e2da;display:block}figcaption{font-family:-apple-system,Inter,Arial,sans-serif;font-size:12px;color:#7a7568;margin-top:8px}
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  details{border-top:1px solid #e5e2da;border-bottom:1px solid #e5e2da;padding:10px 0;margin:14px 0}
+  summary{cursor:pointer;font-family:-apple-system,Inter,Arial,sans-serif;font-size:13.5px;font-weight:600}
+  pre{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:12.5px;white-space:pre-wrap;word-break:break-word;color:#3d3a33;background:#f3f1ea;padding:12px;margin:10px 0 0;line-height:1.5}
+  .msg{margin:10px 0}.msg .role{font-family:-apple-system,Inter,Arial,sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7a7568}
+  table{width:100%;border-collapse:collapse;font-family:-apple-system,Inter,Arial,sans-serif;font-size:14px;margin:8px 0 4px}
+  th{text-align:left;font-weight:600;padding:8px 6px;border-bottom:1px solid #1a1a1a;vertical-align:bottom}td{padding:8px 6px;border-bottom:1px solid #e5e2da;vertical-align:top}
+  td.num,th.num{text-align:right}
+  code{font-family:"SF Mono",Menlo,monospace;font-size:.88em;background:#f3f1ea;padding:1px 5px}
+  .chart{font-family:-apple-system,Inter,Arial,sans-serif;font-size:12px;margin:12px 0}
+  .row{display:grid;grid-template-columns:34px 22px repeat(5,1fr) 70px;gap:4px;align-items:center;margin:3px 0}
+  .row .id{color:#7a7568}.row .sc{color:#1a1a1a;font-weight:600}
+  .row i{display:block;height:13px}.i-good{background:#1a1a1a}.i-bad{background:#f5b800}.i-unclear{background:repeating-linear-gradient(45deg,#c9c5bb 0 3px,#f3f1ea 3px 6px)}
+  .row .mine{color:#7a7568;text-align:right;white-space:nowrap}
+  .legend{display:flex;gap:14px;align-items:center;color:#7a7568;margin:10px 0 0}.legend i{display:inline-block;width:26px;height:11px;vertical-align:middle;margin-right:5px}
+  .broke{margin:48px 0;padding:18px 20px;border-left:3px solid #1a1a1a;background:#f3f1ea}.broke p{margin:0 0 10px;font-size:16px}.broke p:last-child{margin:0}
+  .small{font-family:-apple-system,Inter,Arial,sans-serif;font-size:13px;color:#7a7568}
+  .note{font-family:-apple-system,Inter,Arial,sans-serif;font-size:13px;color:#7a7568;border:1px dashed #d9d5cb;padding:8px 12px;margin:10px 0}
+  details.deeper{background:#f3f1ea;border:0;padding:12px 16px;margin:16px 0}details.deeper summary{color:#1a1a1a}details.deeper p,details.deeper li{font-size:15px}details.deeper ul{padding-left:18px}
+  .diag{margin:18px 0;font-family:-apple-system,Inter,Arial,sans-serif}.diag svg{width:100%;height:auto;display:block}
+  .tri{counter-reset:none}.tri h2 .n{font-family:-apple-system,Inter,Arial,sans-serif;font-size:13px;letter-spacing:.1em;color:#7a7568;display:block;margin-bottom:4px}
+  .pf{margin-top:56px;padding-top:18px;border-top:1px solid #1a1a1a;font-family:-apple-system,Inter,Arial,sans-serif;font-size:13.5px;color:#7a7568;line-height:1.7}
+  @media (max-width:560px){.stats{grid-template-columns:repeat(2,1fr)}.stat:nth-child(2){border-right:0}.stat:nth-child(-n+2){border-bottom:1px solid #e5e2da}h1{font-size:30px}.pair{grid-template-columns:1fr}.row{grid-template-columns:30px 18px repeat(5,1fr) 56px}}
+</style>
+</head>
+<body>
+{% set v = v0 %}
+<div class="top">
+  <nav class="vnav">
+    <a href="#problem">problem</a>
+    <a href="#tradeoffs">trade-offs</a>
+    <a href="#v0">v0</a>
+    <span>v1</span>
+    <a href="#v2">v2</a>
+    <a href="#cost">cost</a>
+    <a href="#deploy">ops</a>
+    <a href="#next">next</a>
+  </nav>
+  <a class="tool" href="/">🍌 Try the tool</a>
+</div>
+
+<p class="kicker">How it's built</p>
+<h1>A fun handstand detector, built like a real one</h1>
+<p class="lede">fixmybanana.com is a fun little tool with a real model behind it: upload a handstand photo and an OpenAI vision model tells you whether you have "good form" or a "banana back", the arched spine every beginner has.</p>
+<p>It was one of my first fun projects with AI, built the way I learn best: by making something and seeing where it breaks. The subject wasn't random. Before data science I was a personal trainer, and I still spend a lot of my time training friends and keeping them accountable. A tool that tells you, kindly and with a bit of humour, that your handstand is a banana is the kind of thing I'd want in my own gym bag.</p>
+<p>Then I asked the question I ask clients: how do I know it works? This page is my answer, kept as a lab notebook. Each version below shows what I changed, what it cost, and how it scored against the same fixed set of {{ c.n if c else 54 }} photos that I labelled by hand. Some of the numbers are bad. That's the point: you can't improve what you haven't measured, and I'd rather show you the measuring than the marketing.</p>
+<p class="small">Code, prompts, test set and every result CSV: <a href="https://github.com/shhirl/fixmybanana">github.com/shhirl/fixmybanana</a>.</p>
+
+{% if v %}
+<div class="stats">
+  <div class="stat"><b>{{ v.n_photos }}</b><span>photos in the fixed test set</span></div>
+  <div class="stat"><b>{{ v.majority_pct }}%</b><span>of photos where v0 agrees with my label</span></div>
+  <div class="stat"><b>{{ v.consistency_pct }}%</b><span>of photos get the same answer on all {{ v.n_runs }} runs</span></div>
+  <div class="stat"><b>${{ '%.3f' % v.cost_per_analysis }}</b><span>per analysis, {{ v.models.keys() | join(', ') }}</span></div>
+</div>
+{% endif %}
+
+<section id="problem" class="tri">
+  <h2><span class="n">1 · THE PROBLEM</span>A confident answer with nothing behind it</h2>
+  <p>The first version did what most AI demos do: it sent a photo to a model with a prompt and showed whatever came back, in a nice card, as if it were a verdict. Five things were wrong with that, and none of them showed on the screen.</p>
+  <ul>
+    <li><b>Nobody knew if it was right.</b> Not me, not the user. There was no reference to compare against, so "it seems to work" was the only evidence.</li>
+    <li><b>The same photo could get different answers.</b> Nothing measured how often, so a user who uploaded twice and got two verdicts had no way to know which to trust.</li>
+    <li><b>It had no way to say "I can't tell".</b> Front views, mirrors, a plank, a statue: everything got a label or a broken message.</li>
+    <li><b>It could fail silently.</b> When the account ran out of credits, the site kept returning 200 with an error card, and the code threw away the reason.</li>
+    <li><b>Cost was a feeling, not a number.</b> "It's cheap" is not a budget.</li>
+  </ul>
+  <p>The question this page answers is the one I'd ask a client about any model in production: <i>how do you know, and what does it cost to find out?</i></p>
+</section>
+
+<section id="tradeoffs" class="tri">
+  <h2><span class="n">2 · THE TRADE-OFFS</span>Decisions, and what they cost</h2>
+  <p>Each row is a choice I made, the alternative I turned down, and why. The alternatives aren't wrong; they're wrong at this scale or this budget.</p>
+  <table>
+    <tr><th>decision</th><th>chose</th><th>instead of</th><th>why</th></tr>
+    <tr><td>Reference labels</td><td>My own hand labels, then a second labeller</td><td>An LLM as judge</td><td>A judge needs 100+ validated labels to trust and drifts over time. At 54 photos, reading every failure myself is cheaper and more honest. Agreement between my two labellers, 66%, is published as the ceiling.</td></tr>
+    <tr><td>Test set</td><td>54 photos chosen along known axes</td><td>Random sample of real uploads</td><td>Random uploads are mostly side-view gym shots; I'd learn nothing about the edges. The price is that the set doesn't match the live distribution, which is what monitoring (v5) is for.</td></tr>
+    <tr><td>Photo source</td><td>Creative Commons + 5 marked synthetic</td><td>Students' and friends' photos, or 200 generated ones</td><td>The set is public and reproducible, so it can only hold images I may republish. Synthetic images leak the label into the pixels; kept to the two axes Commons can't supply.</td></tr>
+    <tr><td>Target</td><td>Binary label (v0), 0–10 score next (v1)</td><td>Score from the start</td><td>Measure the thing that shipped first. The binary is noisier than it looks; the score is the fix, and the eval will show by how much.</td></tr>
+    <tr><td>Repeats</td><td>5 runs per photo</td><td>1 run, or 20</td><td>One run hides the wobble; 20 costs four times more for a spread estimate that barely tightens. 5 is enough to see which photos are unstable. Whole run: $1.24.</td></tr>
+    <tr><td>Model</td><td>gpt-4o at full image detail</td><td>A cheaper model or low-detail mode</td><td>Change one thing at a time. Model and detail level get their own row in the table (v4), judged on the same photos with cost and latency beside accuracy.</td></tr>
+    <tr><td>Spend control</td><td>App rate limits + provider cap + prepaid balance</td><td>Trusting the cap alone</td><td>Caps bound the rate, a balance is a stock; the stock is what ran out. Three layers, and a plan for the one that failed.</td></tr>
+    <tr><td>Privacy</td><td>Uploads deleted after 24 h, no pixels logged</td><td>Keeping uploads to build a real-traffic set</td><td>The privacy note on the home page has to stay true. Monitoring will log numbers per upload, not images.</td></tr>
+    <tr><td>Deployment</td><td>Main is production, PR is the gate</td><td>A staging environment</td><td>For one developer and one page, a PR plus one-click rollback is the cheaper safety net. The gap it leaves, a page that renders but whose model calls fail, is covered by a daily synthetic check.</td></tr>
+  </table>
+</section>
+
+<section id="solution" class="tri">
+  <h2><span class="n">3 · HOW I SOLVED IT</span>A lab notebook, one version at a time</h2>
+  <p>Everything below is the depth. It is organised as versions, each with the same four parts: what changed and why, what it looks like, how it scored on the fixed set, and what it cost. The test set never changes, so the only thing that moves the numbers is the change I made.</p>
+  <ul>
+    <li><a href="#v0">v0</a>: the first draft, measured anyway, with the exact prompts and a real response.</li>
+    <li><a href="#v2">v2</a>: the test set, the labelling rule, the second labeller, the five-run wobble chart and the failure taxonomy.</li>
+    <li><a href="#cost">Cost</a>: what "it costs money" actually means, and the outage that taught it.</li>
+    <li><a href="#deploy">Ops</a>: how it's deployed, limited, rolled back and logged, and what monitoring would add.</li>
+    <li><a href="#next">Next</a>: the changes the eval says to make, in order, each tied to a failure row.</li>
+  </ul>
+</section>
+
+<section>
+  <h3>How the tool works</h3>
+  <p>One upload triggers up to two calls to OpenAI's chat-completions API, both with the photo attached.</p>
+  <ol>
+    <li><b>Classifier.</b> Temperature 0, five output tokens, two text-only examples, told to answer exactly "good form" or "banana back". The app then checks whether the word "banana" or "good" appears in the reply; anything else is shown to the user raw, as "unclear".</li>
+    <li><b>Coaching feedback.</b> Only if the classifier said banana back: temperature 0.3, up to 200 tokens, two or three sentences on spine, hips, shoulders and body line.</li>
+  </ol>
+  <p>Models are tried in order until one returns a 200. Uploads are rate-limited (5 per IP per day, 50 per day in total) and deleted after 24 hours.</p>
+  {% if raw %}
+  <details>
+    <summary>Show the exact prompts, captured from a real request</summary>
+    <p class="small">Recorded by <code>eval/capture_v0.py</code>, which runs the live code path with the network call logged, so this can't drift from what the site sends. Image bytes removed.</p>
+    {% for call in raw.calls %}
+      <p class="small"><b>Call {{ loop.index }}</b> · model <code>{{ call.request.model }}</code> · temperature {{ call.request.temperature }} · max_tokens {{ call.request.max_tokens }}</p>
+      {% for m in call.request.messages %}
+        <div class="msg"><div class="role">{{ m.role }}</div>
+        {% if m.content is string %}<pre>{{ m.content }}</pre>{% else %}{% for part in m.content %}{% if part.type == 'text' %}<pre>{{ part.text }}</pre>{% else %}<p class="small">[image attached]</p>{% endif %}{% endfor %}{% endif %}
+        </div>
+      {% endfor %}
+      <div class="msg"><div class="role">response · {{ call.latency_s }} s</div><pre>{{ call.response.choices[0].message.content if call.response.choices else call.response }}</pre></div>
+    {% endfor %}
+  </details>
+  {% elif prompt_md %}
+  <details><summary>Show the exact prompts (v0)</summary><pre>{{ prompt_md }}</pre></details>
+  {% endif %}
+</section>
+
+<section id="vision">
+  <h3>How a vision model reads a photo</h3>
+  <p>The model behind this site is not a pose estimator. It has no skeleton, no joint angles, no notion of "vertical". It is a language model that has learned to treat image patches as if they were words.</p>
+  <div class="diag"><svg viewBox="0 0 720 200" role="img" aria-label="Photo to tiles to tokens to transformer to text">
+    <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1a1a1a"/></marker></defs>
+    <g font-size="12" fill="#1a1a1a">
+      <rect x="10" y="40" width="110" height="110" fill="#f3f1ea" stroke="#1a1a1a"/><text x="65" y="100" text-anchor="middle" font-size="26">🤸</text><text x="65" y="172" text-anchor="middle">photo</text>
+      <line x1="122" y1="95" x2="160" y2="95" stroke="#1a1a1a" marker-end="url(#ar)"/>
+      <g transform="translate(165,40)"><rect width="110" height="110" fill="#fff" stroke="#1a1a1a"/><path d="M36 0v110M73 0v110M0 36h110M0 73h110" stroke="#e5e2da"/><text x="55" y="132" text-anchor="middle">512 px tiles</text></g>
+      <line x1="278" y1="95" x2="316" y2="95" stroke="#1a1a1a" marker-end="url(#ar)"/>
+      <g transform="translate(320,58)"><rect width="16" height="16" fill="#f5b800"/><rect x="20" width="16" height="16" fill="#f5b800"/><rect x="40" width="16" height="16" fill="#f5b800"/><rect x="60" width="16" height="16" fill="#f5b800"/><rect y="20" width="16" height="16" fill="#f5b800"/><rect x="20" y="20" width="16" height="16" fill="#f5b800"/><rect x="40" y="20" width="16" height="16" fill="#f5b800"/><rect x="60" y="20" width="16" height="16" fill="#f5b800"/><rect y="40" width="16" height="16" fill="#1a1a1a"/><rect x="20" y="40" width="16" height="16" fill="#1a1a1a"/><rect x="40" y="40" width="16" height="16" fill="#1a1a1a"/><rect x="60" y="40" width="16" height="16" fill="#1a1a1a"/><text x="38" y="80" text-anchor="middle">~1,000 image</text><text x="38" y="94" text-anchor="middle">tokens + prompt</text></g>
+      <line x1="404" y1="95" x2="442" y2="95" stroke="#1a1a1a" marker-end="url(#ar)"/>
+      <g transform="translate(446,40)"><rect width="120" height="110" rx="6" fill="#1a1a1a"/><text x="60" y="52" text-anchor="middle" fill="#fff">one transformer</text><text x="60" y="70" text-anchor="middle" fill="#fff" font-size="11">text and image</text><text x="60" y="84" text-anchor="middle" fill="#fff" font-size="11">tokens together</text></g>
+      <line x1="568" y1="95" x2="606" y2="95" stroke="#1a1a1a" marker-end="url(#ar)"/>
+      <g transform="translate(610,60)"><rect width="100" height="70" fill="#f3f1ea" stroke="#1a1a1a"/><text x="50" y="30" text-anchor="middle" font-family="Menlo,monospace" font-size="11">"banana</text><text x="50" y="46" text-anchor="middle" font-family="Menlo,monospace" font-size="11">back"</text><text x="50" y="92" text-anchor="middle">next tokens</text></g>
+    </g></svg></div>
+  <p>The photo is cut into 512-pixel tiles, each tile is encoded into a few hundred vectors, and those vectors are appended to the prompt as if they were extra words. The same transformer that predicts the next word then predicts the answer, one token at a time. Three things follow from that, and all three show up in the eval below.</p>
+  <ul>
+    <li><b>It sees a gestalt, not geometry.</b> It has seen many captioned photos of arched and straight handstands, so it recognises the look of a banana. It does not measure the hip angle. A silhouette against a sunset, or legs split in a way that hides the spine, changes the look without changing the arch.</li>
+    <li><b>The prompt is part of the input.</b> Tell it the photo is "side-on" and it will try to read a front view as if it were. Tell it to answer in five tokens and a hedge gets cut mid-sentence.</li>
+    <li><b>The answer is sampled.</b> Even at temperature 0, when "good" and "banana" are nearly tied, tiny numerical differences between runs flip the arg-max. Borderline photos wobble; clear ones don't.</li>
+  </ul>
+  <details class="deeper"><summary>Going deeper: what "image tokens" are, and why it matters for cost and accuracy</summary>
+    <p>Current vision-language models bolt a vision encoder (a ViT, trained contrastively on image-caption pairs) onto a decoder-only language model through a small projection layer. The encoder turns each patch, typically 14 or 16 pixels square, into an embedding; a pooling step reduces those to a fixed budget per tile (OpenAI bills 170 tokens per 512-pixel tile plus 85 for a downscaled overview). The language model attends over image tokens and text tokens with the same mechanism, so "banana back" in the system prompt and the pixels of a lumbar curve compete and cooperate in the same attention heads.</p>
+    <p>Consequences a data scientist would care about: resolution is a cost lever (the low-detail mode sends only the 85-token overview, roughly a quarter of the price, and is worth testing on this task because arch is a coarse feature); the model's spatial reasoning is bounded by patch pooling, so fine angular judgments are unreliable by construction; and there is no calibrated probability behind the answer unless you ask for one, which is why v1 requests a confidence field with a reason rather than trusting a bare label.</p>
+  </details>
+</section>
+
+<section id="v0">
+  <div class="vtag">v0 <span>8 Sep 2026 · baseline</span></div>
+  <h2>The first draft, measured anyway</h2>
+  <h3>1 · What changed and why</h3>
+  <p>Nothing changed. This is the site as it was first built: a free-text prompt, a string match on the answer, no schema, no eval, no logging of what the model actually said. I ran the eval on it anyway. A bad baseline is more useful than no baseline, because every later version is judged by the same photos.</p>
+  <h3>2 · What it looks like</h3>
+  <figure><img src="{{ url_for('static', filename='how-its-built/v0-result.jpg') }}" alt="A v0 result: Banana Alert card with AI coaching text"><figcaption>A healthy v0 result card, 8 Sep 2026. The prompts are in the collapsible above.</figcaption></figure>
+  <h3>3 · Eval on the fixed set</h3>
+  {% if v %}
+  <p>Each of the {{ v.n_handstands }} handstand photos went through the live classifier code {{ v.n_runs }} times ({{ v.n_analyses }} analyses, controls included). My hand label is the reference.</p>
+  <table>
+    <tr><th>metric</th><th class="num">v0</th></tr>
+    <tr><td>Agrees with my label, per run</td><td class="num">{{ v.agreement_pct }}% ({{ v.agreement_n }})</td></tr>
+    <tr><td>Agrees with my label, majority of {{ v.n_runs }} runs per photo</td><td class="num">{{ v.majority_pct }}% ({{ v.majority_n }})</td></tr>
+    <tr><td>Same answer on all {{ v.n_runs }} runs</td><td class="num">{{ v.consistency_pct }}% ({{ v.consistency_n }})</td></tr>
+    <tr><td>Runs that returned neither label ("unclear")</td><td class="num">{{ v.unclear_runs }} of {{ v.n_hs_runs }}</td></tr>
+    <tr><td>Non-handstand controls refused</td><td class="num">0 of {{ v.n_controls }}, v0 has no way to say "not a handstand"</td></tr>
+  </table>
+  <h3>Agreement by axis, majority per photo</h3>
+  <table>
+    <tr><th>axis</th><th>value</th><th class="num">agree</th></tr>
+    {% for axis, groups in v.axes.items() %}{% for val, g in groups.items() %}{% if g.n >= 2 %}
+    <tr><td>{{ axis }}</td><td>{{ val }}</td><td class="num">{{ g.agree }}/{{ g.n }} ({{ (100 * g.agree / g.n) | round | int }}%)</td></tr>
+    {% endif %}{% endfor %}{% endfor %}
+  </table>
+  <p class="small">Full per-run data: <a href="https://github.com/shhirl/fixmybanana/blob/main/eval/results/v0.csv">eval/results/v0.csv</a>.</p>
+  <details class="deeper"><summary>Going deeper: what {{ v.n_handstands }} photos and {{ v.n_runs }} runs can and can't tell you</summary>
+    <ul>
+      <li><b>The headline number has a wide interval.</b> {{ v.majority_pct }}% agreement on {{ v.n_handstands }} photos is a binomial estimate with a 95% Wilson interval of roughly {{ v.majority_ci95[0] }} to {{ v.majority_ci95[1] }}%. A later version that scores 10 points higher on the same set is not yet evidence of improvement. Because every version sees the same photos, the honest comparison is paired: count photos that flipped from wrong to right versus right to wrong (McNemar's test), which needs far fewer photos than comparing two independent percentages.</li>
+      <li><b>Agreement is inflated by chance on a balanced binary.</b> Two labellers who flip coins agree half the time. Cohen's kappa corrects for that: the model's kappa against my labels is {{ v.kappa_model_vs_shirley }} (0 is chance, 1 is perfect). That is the number I'd put in a report.</li>
+      <li><b>Temperature 0 is not determinism.</b> {{ v.consistency_n }} photos got the same label on all {{ v.n_runs }} runs. The rest wobbled, with an identical prompt and image. Batched GPU inference, non-associative floating-point sums and mixture-of-experts routing all make the arg-max unstable when the top two tokens are close, which is exactly the case on borderline photos. So each call is a draw from a distribution, not a lookup. Repeating and taking the majority is cheap ensembling; the spread is the more useful signal, because it marks the photos the model is unsure about even though it never says so.</li>
+      <li><b>"Unclear" is an interface bug, not a model opinion.</b> {{ v.unclear_runs }} of {{ v.n_hs_runs }} runs returned neither label. With <code>max_tokens=5</code> a refusal ("I'm unable to…") gets cut off and the string match finds neither "good" nor "banana", so the user sees the fragment. Structured output (v1) removes that failure by construction.</li>
+    </ul>
+  </details>
+  <h3>4 · Cost per analysis</h3>
+  <p>Mean ${{ '%.4f' % v.cost_per_analysis }} per upload on {{ v.models.keys() | join(', ') }} (about {{ '{:,}'.format(v.prompt_tokens_1call) }} input tokens per call, mostly the image), {{ v.latency_s }} s mean latency. The whole eval run cost ${{ '%.2f' % v.total_cost }}. Prices as of 8 Sep 2026.</p>
+  {% else %}
+  <p class="note">Eval not yet run for this version.</p>
+  {% endif %}
+</section>
+
+<section id="v1">
+  <div class="vtag soon">v1 <span>structured output · designed, not yet wired in</span></div>
+  <p class="small">Next: force a JSON schema. A usable-photo flag, view, support, a 0–10 score, five body segments, and a confidence with a reason. Same photos, same table.</p>
+</section>
+
+<section id="v2">
+  <div class="vtag">v2 <span>8 Sep 2026 · test set and error analysis</span></div>
+  <h2>Building something to measure against</h2>
+  <h3>1 · What changed and why</h3>
+  <p>No code changed in v2. The change is that there is now a fixed test set and a way to read failures instead of guessing at them. I built the set before looking at any model output, along axes I already knew mattered from teaching handstands, not by random sampling. Random uploads would be mostly side-view gym photos, and I'd learn nothing about the edges.</p>
+  <h3>2 · Test set design</h3>
+  {% if c %}
+  <p>{{ c.n }} photos: {{ c.hs }} handstands and {{ c.ctl }} not-a-handstand controls, chosen along these axes.</p>
+  <table>
+    <tr><th>axis</th><th>in the set</th><th>why it's there</th></tr>
+    <tr><td>View</td><td>side {{ c.view.side }}, front {{ c.view.front }}, back {{ c.view.back }}, angled {{ c.view.angled }}</td><td>The prompt says "side-on". Front and back views hide the arch; the model should be less sure there, not more.</td></tr>
+    <tr><td>Support</td><td>freestanding {{ c.support.freestanding }}, wall {{ c.support.wall }}</td><td>Wall handstands often look straighter than they are.</td></tr>
+    <tr><td>Photo quality</td><td>good {{ c.quality.good }}, dark {{ c.quality.dark }}, low-res {{ c.quality.low_res }}, blurry {{ c.quality.blurry }}</td><td>Real uploads are grainy gym phone shots. Should the model still answer?</td></tr>
+    <tr><td>Controls</td><td>{{ c.ctl }} non-handstands</td><td>A plank, a surfer, a statue, an astronaut. The model must refuse, not score.</td></tr>
+    <tr><td>Banana range</td><td>my scores run 1 to 9</td><td>Clear cases are easy. The ambiguous middle is where a tool earns trust.</td></tr>
+  </table>
+  <p>Where the photos came from: {{ c.commons }} are Creative Commons or public-domain images from Wikimedia Commons, with licence and author for each recorded in the repo. {{ c.derived }} are darkened, blurred or downscaled copies of photos already in the set, to test robustness on the same pose. {{ c.synthetic }} are AI-generated, because Commons has almost no wall-assisted or mirror handstands. They are marked synthetic in the labels, and one of them has anatomy no human could produce; I kept it as a deliberate edge case. There are no photos of students or friends: the set is public and reproducible, so it only contains images I'm allowed to republish.</p>
+  {% endif %}
+  <details class="deeper"><summary>Going deeper: why I didn't use AI-generated images to make the set bigger</summary>
+    <p>Generating 200 handstand photos would take an afternoon and cost a few credits, and it would make the eval worse. Four reasons, in order of how much they matter.</p>
+    <ul>
+      <li><b>Label leakage.</b> To generate a banana back I have to write "clear lower-back arch, hips forward" into the prompt. The label is baked into the pixels by the same kind of model that will later be asked to read it. I'd be testing whether one vision-language model can recover another's prompt, not whether it can judge a body.</li>
+      <li><b>Distribution shift.</b> Generators produce centred, well-lit, anatomically tidy bodies. Real uploads are grainy phone photos at odd angles with a gym in the background. A model can score well on the clean set and still fail on the real one, and the eval would never show it.</li>
+      <li><b>Plausibility and diversity.</b> One of my five synthetic images has a spine no human has. The other four share a look. Fifty of them would be fifty samples from a narrow distribution, which inflates the count without adding information.</li>
+      <li><b>Where synthetic is legitimate.</b> Controls, and axes the real-world source can't supply (here: wall-assisted and mirror shots). Kept few, marked in the data, reported as their own row in the axis table so a reader can see whether the model behaves differently on them.</li>
+    </ul>
+    <p>The cheaper way to test robustness is the one I used for three photos: take a real photo and change exactly one thing (darken it, blur it, downscale it). Same pose, same label, one variable moved. That is a controlled experiment; a fresh generated image is a new confounded sample.</p>
+  </details>
+  <figure><img src="{{ url_for('static', filename='how-its-built/testset-sheet.jpg') }}" alt="Contact sheet of the 54-photo test set"><figcaption>The whole set. Yellow outline: AI-generated. Grey outline: degraded copy. "ctl": not a handstand.</figcaption></figure>
+  <h3>3 · Labelling</h3>
+  <p>I scored every handstand 0 to 10 (0 is a ruler, 10 is a croissant) before seeing any model output. The binary label is derived by a fixed rule, 0 to 5 is good form and 6 to 10 is banana back, so it can't drift from the score. The cut sits at 6 because the v0 prompt defines banana back as a <i>clear</i> arch.</p>
+  {% if v %}
+  <p>To check my own consistency I had a second labeller, Claude, score the set independently with the same photos and the same rule. We agreed on the binary label for {{ v.interrater_pct }}% of handstands ({{ v.interrater_n }}). Most disagreements are photos scored 4 to 6 by one of us, the borderline the rule is forced to cut through. That number is a ceiling: a model can't reliably agree with me more often than a second careful reader does.</p>
+  <details class="deeper"><summary>Going deeper: why I report kappa next to agreement</summary>
+    <p>Raw agreement of {{ v.interrater_pct }}% sounds decent, but with a roughly balanced binary label, chance alone gives about 50%. Cohen's kappa between the two labellers is {{ v.kappa_interrater }}, which the usual scale calls "fair". Most of the disagreement sits in scores of 4 to 6, where the rule forces a cut through a continuum. Two consequences: the binary target is noisier than it looks, so a 0 to 10 score with a tolerance band (within one banana) is a better target for v1 onward; and any model kappa above the inter-rater kappa should be treated with suspicion, not celebrated.</p>
+  </details>
+  <h3>4 · Same photo, five answers</h3>
+  <p>This is the chart I'd show a client first. Each row is a photo, sorted by my score; the five marks are the label from each run. Rows with mixed marks are photos where the same model, same prompt, same image gave different answers. Any single upload on the live site is one draw from this.</p>
+  <div class="chart">
+    {% for p in v.per_photo %}
+    <div class="row"><span class="id">{{ p.id }}</span><span class="sc">{{ p.shirley_score }}</span>
+      {% for r in p.runs %}<i class="{{ 'i-good' if r == 'good form' else ('i-bad' if r == 'banana back' else 'i-unclear') }}" title="{{ r }}"></i>{% endfor %}
+      {% for _ in range(5 - p.runs | length) %}<i></i>{% endfor %}
+      <span class="mine">me: {{ 'good' if p.shirley_label == 'good form' else 'banana' }}</span></div>
+    {% endfor %}
+    <div class="legend"><span><i class="i-good"></i>good form</span><span><i class="i-bad"></i>banana back</span><span><i class="i-unclear"></i>neither ("unclear")</span></div>
+  </div>
+  <h3>Controls: what did v0 say about photos that aren't handstands?</h3>
+  <table><tr><th>photo</th><th>what it is</th><th>five answers</th></tr>
+    {% for k in v.controls %}<tr><td>{{ k.id }}</td><td>{{ k.note }}</td><td>{{ k.runs | join(', ') }}</td></tr>{% endfor %}
+  </table>
+  {% endif %}
+  <h3>5 · Where it fails</h3>
+  {% if tax %}
+  <p>I read every run that disagreed with me or with itself before writing the numbers above. They group into a handful of failure modes. Counts are photos, not runs.</p>
+  <table><tr><th>failure mode</th><th class="num">photos</th><th>examples</th><th>likely cause</th></tr>
+    {% for t in tax %}<tr><td>{{ t.name }}</td><td class="num">{{ t.count }}</td><td>{{ t.examples | join(', ') }}</td><td>{{ t.cause }}</td></tr>{% endfor %}
+  </table>
+  <p>The next change is the one that removes the biggest row. That's v3, and it will be measured on the same photos.</p>
+  {% else %}
+  <p class="note">Error analysis in progress.</p>
+  {% endif %}
+</section>
+
+<section id="cost">
+  <div class="vtag">Production <span>8 Sep 2026 · cost, limits, and running out</span></div>
+  <h2>What broke, and what "it costs money" actually means</h2>
+  <p>On 8 Sep 2026, while I was taking baseline screenshots, every upload returned "All Vision Models Failed". The site had been silently broken for an unknown time. The cause was boring: the OpenAI account had run out of prepaid credits. The real problem was that the code caught the error and threw the body away, so the only visible symptom was a generic message and a fallback loop through several model names that all failed the same way.</p>
+  <p>Fix: add credits (two minutes), log status and response body for each failed call, and show users a message that distinguishes "we're out of quota" from "you're rate-limited" (<a href="https://github.com/shhirl/fixmybanana/pull/8">PR #8</a>). The lesson I'd bring to a client: the cheapest reliability work is making failures say why they failed.</p>
+  <div class="pair"><figure><img src="{{ url_for('static', filename='how-its-built/v0-failed.jpg') }}" alt="Failed result"><figcaption>16:45, every upload failing.</figcaption></figure><figure><img src="{{ url_for('static', filename='how-its-built/v0-result.jpg') }}" alt="Working result"><figcaption>17:20, after credits and logging.</figcaption></figure></div>
+  <details class="deeper" open><summary>Going deeper: three layers of spend control, and the one that failed</summary>
+    <p>Each analysis is one or two calls to gpt-4o with an image attached. The image dominates the bill: at high detail OpenAI charges 85 tokens plus 170 per 512-pixel tile, so a phone photo is about 1,000 input tokens, or roughly a quarter of a cent per call at list price. A banana back costs two calls. Call it half a cent per upload{% if v %}; the measured mean is ${{ '%.4f' % v.cost_per_analysis }}{% endif %}.</p>
+    <ul>
+      <li><b>Layer 1, the app.</b> Five uploads per IP per day and fifty per day in total, enforced in the Flask app. Worst-case spend is fifty uploads times two calls times a quarter cent: about 25 cents a day. This is the layer that stops a bored visitor or a script from running up the bill.</li>
+      <li><b>Layer 2, the provider's budget cap.</b> A hard limit of $20 per day set on the OpenAI account. Eighty times the app's worst case, so it never triggers in normal life. It exists for the day the app limiter has a bug, or a key leaks. Caps limit the <i>rate</i> of spend.</li>
+      <li><b>Layer 3, the prepaid balance.</b> This is the one that failed. A balance is a <i>stock</i>, not a rate. Neither cap says anything when it drains to zero over months of small, legitimate use, and the API's answer to an empty balance is an HTTP 429 that looks, at a glance, exactly like being rate-limited. The code treated both the same way, retried through four model names, and reported a generic failure.</li>
+    </ul>
+    <p>What I'd set up for a client, in order: a balance alert at a threshold that gives a week's warning; auto-recharge with a monthly ceiling rather than no recharge at all; code that distinguishes the two 429s (<code>insufficient_quota</code> is persistent and wakes a human, <code>rate_limit_exceeded</code> is transient and retries with backoff); a daily synthetic check that exercises the model path end to end, because a health check on the home page returns 200 while the product is dead; and an alert on error rate, not only on uptime.</p>
+  </details>
+</section>
+
+<section id="next">
+  <h2>What the eval says to change, in order</h2>
+  <p>Before the eval, the obvious next step was "make the prompt better". After it, the list looks different, because each item is tied to a row in the failure table and can be checked on the same photos.</p>
+  <div class="diag"><svg viewBox="0 0 720 150" role="img" aria-label="The eval loop">
+    <g font-size="12" fill="#1a1a1a" font-family="-apple-system,Inter,Arial,sans-serif">
+      <rect x="10" y="45" width="120" height="60" fill="#f3f1ea" stroke="#1a1a1a"/><text x="70" y="70" text-anchor="middle">fixed test set</text><text x="70" y="88" text-anchor="middle" fill="#7a7568">54 photos, labelled</text>
+      <line x1="132" y1="75" x2="168" y2="75" stroke="#1a1a1a" marker-end="url(#ar)"/>
+      <rect x="172" y="45" width="120" height="60" fill="#f3f1ea" stroke="#1a1a1a"/><text x="232" y="70" text-anchor="middle">run 5×</text><text x="232" y="88" text-anchor="middle" fill="#7a7568">live classifier code</text>
+      <line x1="294" y1="75" x2="330" y2="75" stroke="#1a1a1a" marker-end="url(#ar)"/>
+      <rect x="334" y="45" width="120" height="60" fill="#f3f1ea" stroke="#1a1a1a"/><text x="394" y="70" text-anchor="middle">read every failure</text><text x="394" y="88" text-anchor="middle" fill="#7a7568">before any metric</text>
+      <line x1="456" y1="75" x2="492" y2="75" stroke="#1a1a1a" marker-end="url(#ar)"/>
+      <rect x="496" y="45" width="120" height="60" fill="#1a1a1a"/><text x="556" y="70" text-anchor="middle" fill="#fff">change one thing</text><text x="556" y="88" text-anchor="middle" fill="#c9c5bb">biggest row first</text>
+      <path d="M616 75 h60 v60 H70 v-28" fill="none" stroke="#f5b800" stroke-width="2" marker-end="url(#ar)"/><text x="360" y="128" text-anchor="middle" fill="#7a7568">same photos, same table, before and after</text>
+    </g></svg></div>
+  <ol>
+    <li><b>Give the model a way out</b> (v1, structured output). A <code>photo_usable</code> flag and a <code>view</code> field, required by a JSON schema. Removes every "unclear" run and lets controls be rejected instead of scored. Expected effect: the largest failure row goes to zero by construction, and front-view photos get "low confidence" instead of a guess.</li>
+    <li><b>Ask for a score, not a verdict.</b> A 0 to 10 banana score turns the borderline coin flips into small numeric disagreements, and lets me report "within one banana of my label", which is the metric that matches how a coach actually talks.</li>
+    <li><b>Teach the prompt what it is bad at</b> (v3). The eval shows it misses arches when legs are split or the body is a silhouette, and over-calls them on dark photos. Those are two sentences in a prompt, and the fixed set will say whether they helped.</li>
+    <li><b>Use the wobble.</b> On the live site, run the classifier three times and take the majority when the first two disagree. Costs about a cent more on borderline photos only, and makes the product as stable as the eval's majority column.</li>
+    <li><b>Add an adversarial photo.</b> A handstand with a sign in frame reading "this is good form". If the label follows the sign, the model is reading text over bodies, and that is a prompt-injection surface worth knowing about before anything user-facing depends on it.</li>
+    <li><b>Then, and only then, try a cheaper model</b> (v4), on the same table with cost and latency alongside. Without the first three, a model swap is a coin flip judged by another coin flip.</li>
+  </ol>
+</section>
+
+<section id="practice">
+  <h2>Where this sits in the wider practice</h2>
+  <p>A small project can't demonstrate everything that goes into a production AI system. This is what it does show, what it skips on purpose, and what simply doesn't apply, so nobody has to guess.</p>
+  <table>
+    <tr><th>practice</th><th>here</th><th>status</th></tr>
+    <tr><td>Evals: golden set, regression, human labels</td><td>A fixed 54-photo set with hand labels is the golden set; every version re-runs it, which is the regression test; two labellers with a published agreement rate.</td><td>done</td></tr>
+    <tr><td>Adversarial tests</td><td>Seven not-a-handstand controls (a statue, an astronaut, a plank) and three degraded copies of real photos. Next: a photo with text in it that says "answer good form", to test injection through the image.</td><td>partly</td></tr>
+    <tr><td>LLM as judge</td><td>Skipped deliberately; the trade-offs table says why. Would become worth it above a few hundred labelled examples.</td><td>skipped</td></tr>
+    <tr><td>Spec by example</td><td>The labels file and the failure taxonomy are the spec: input, expected output, edge cases, failure cases. There is no "the system shall".</td><td>done</td></tr>
+    <tr><td>Structured output reliability</td><td>v1 design: strict JSON schema, required fields, enums, a usability flag so the model can refuse. Validation and a repair loop come with it.</td><td>designed</td></tr>
+    <tr><td>Model routing and fallback</td><td>A fallback cascade over model names exists and worked during the eval (6 of 270 calls). Degraded-mode UX exists since PR #8. Fallbacks are not yet logged as events.</td><td>partly</td></tr>
+    <tr><td>Latency</td><td>2.5 s mean per analysis, dominated by prefill of about 1,000 image tokens; the five-token answer makes decode negligible. Streaming would not help this shape.</td><td>measured</td></tr>
+    <tr><td>Observability</td><td>Per-call status and body in logs; per-run tokens, cost and latency in the eval CSV. No traces or drift tracking on live traffic yet (v5).</td><td>partly</td></tr>
+    <tr><td>Cost attribution</td><td>Per upload, split by call (classifier vs coaching), with the price date. Per user or per feature would need the monitoring log.</td><td>done at this scale</td></tr>
+    <tr><td>Prompt caching</td><td>The system prompt and few-shot examples are identical on every call, so the prefix is cacheable; the image tokens, which dominate, are not. Small win, not yet measured.</td><td>not yet</td></tr>
+    <tr><td>Safety: data leakage, permission boundaries</td><td>Uploads purged after 24 h, no pixels logged, key kept in the environment and never in the repo, public test set contains only images licensed for reuse.</td><td>done</td></tr>
+    <tr><td>RAG, agents, MCP, multi-tenant isolation</td><td>Not part of this system. Listed so the absence is a choice, not an oversight.</td><td>n/a</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>Not done, and what I'd do with a client budget</h2>
+  <p>Things I know are missing, in the order I'd do them if this were paid work.</p>
+  <ul>
+    <li><b>v1 structured output.</b> A JSON schema so the model has to declare the view, whether the photo is usable, a 0 to 10 score and a confidence with a reason. Removes the "unclear" failure mode by construction. Designed, not wired in.</li>
+    <li><b>Fix the top failure mode and re-run</b> (v3). One change, same set, before-and-after table. Eval runs cost cents, so there's no excuse not to.</li>
+    <li><b>A human second labeller.</b> The second reader above is an AI; a coach or a second gymnast would be a stronger check on my labels.</li>
+    <li><b>100 to 200 examples per failure mode.</b> Five examples tell you a failure exists, not how often. Sourcing that many is the expensive part.</li>
+    <li><b>Mirror shots.</b> The set has one; not enough to claim coverage.</li>
+    <li><b>Production sampling</b> (v5). Log score, confidence and latency for real uploads, re-label a weekly sample, chart the score distribution over time. Right now I know how the model behaves on my photos, not on yours.</li>
+    <li><b>A cheaper or second model</b> (v4), judged on the same table plus cost and latency.</li>
+    <li><b>Skipped on purpose: an automated LLM-as-judge.</b> It needs a hundred-plus labelled examples to validate against, and it drifts. At this scale, reading every failure myself is cheaper and more honest.</li>
+  </ul>
+</section>
+
+<section id="deploy">
+  <h2>How it runs, and what I'd watch</h2>
+  <p>The product is small on purpose, but it runs like something real: version-controlled, auto-deployed, rate-limited, with a rollback path and a privacy promise the code actually keeps.</p>
+  <div class="diag"><svg viewBox="0 0 720 230" role="img" aria-label="Deployment architecture">
+    <g font-size="12" fill="#1a1a1a" font-family="-apple-system,Inter,Arial,sans-serif">
+      <rect x="10" y="20" width="130" height="64" fill="#f3f1ea" stroke="#1a1a1a"/><text x="75" y="46" text-anchor="middle">GitHub</text><text x="75" y="64" text-anchor="middle" fill="#7a7568">branch → PR → main</text>
+      <line x1="142" y1="52" x2="178" y2="52" stroke="#1a1a1a" marker-end="url(#ar)"/><text x="160" y="42" text-anchor="middle" fill="#7a7568" font-size="10">push</text>
+      <rect x="182" y="20" width="150" height="64" fill="#f3f1ea" stroke="#1a1a1a"/><text x="257" y="46" text-anchor="middle">Railway</text><text x="257" y="64" text-anchor="middle" fill="#7a7568">Flask + gunicorn, EU</text>
+      <line x1="334" y1="52" x2="370" y2="52" stroke="#1a1a1a" marker-end="url(#ar)"/>
+      <rect x="374" y="20" width="130" height="64" fill="#f3f1ea" stroke="#1a1a1a"/><text x="439" y="46" text-anchor="middle">Cloudflare</text><text x="439" y="64" text-anchor="middle" fill="#7a7568">DNS, TLS, proxy</text>
+      <line x1="506" y1="52" x2="542" y2="52" stroke="#1a1a1a" marker-end="url(#ar)"/>
+      <rect x="546" y="20" width="160" height="64" fill="#1a1a1a"/><text x="626" y="46" text-anchor="middle" fill="#fff">fixmybanana.com</text><text x="626" y="64" text-anchor="middle" fill="#c9c5bb">visitor</text>
+      <line x1="257" y1="86" x2="257" y2="130" stroke="#1a1a1a" marker-end="url(#ar)"/>
+      <rect x="182" y="134" width="150" height="56" fill="#fff" stroke="#f5b800" stroke-width="2"/><text x="257" y="157" text-anchor="middle">OpenAI API</text><text x="257" y="175" text-anchor="middle" fill="#7a7568">2 calls per upload</text>
+      <g fill="#7a7568" font-size="11">
+        <text x="374" y="118">on every deploy: GET / must return 200 or the old build keeps serving</text>
+        <text x="374" y="136">rollback: one click to the previous build, then revert the commit</text>
+        <text x="374" y="154">rate limits: 5 uploads/IP/day, 50/day total (ProxyFix so Cloudflare IPs count right)</text>
+        <text x="374" y="172">uploads purged after 24 h; photos never leave the container except to OpenAI</text>
+        <text x="374" y="190">logs: every failed model call with status + body, since PR #8</text>
+        <text x="374" y="208">$20/day budget cap at OpenAI; prepaid balance alert: still to do</text>
+      </g>
+    </g></svg></div>
+  <details class="deeper"><summary>Going deeper: the operating decisions, and what monitoring would add</summary>
+    <ul>
+      <li><b>Main is production.</b> Every push to <code>main</code> deploys. So behaviour changes go through a branch and a pull request, and merging is the deploy decision. Docs go straight to main. A tag marks each known-good look, and before-and-after screenshots live in the repo, so any visual change can be reverted as a unit.</li>
+      <li><b>The healthcheck is necessary and not sufficient.</b> Railway's check on <code>/</code> stops a build that fails to boot from replacing the running one. It says nothing about a page that renders but whose model calls fail, which is exactly what happened on 8 Sep. The fix is a synthetic check that exercises the model path: one upload of a known photo, daily, asserting on the label.</li>
+      <li><b>Rate limiting is cost control first, abuse control second.</b> Per-IP and global daily caps sit in front of every model call. The <code>ProxyFix</code> middleware matters: behind Cloudflare and Railway's proxy, every request looks like it comes from one IP, and a per-IP limit would lock everyone out after five uploads.</li>
+      <li><b>Fallbacks should be loud.</b> During the eval, six of 270 calls hit a transient rate limit on gpt-4o and silently fell back to gpt-4-turbo, which costs four times as much and is a different model. The loop did its job, but nothing recorded it until the eval CSV did. In production a fallback should be logged and counted, or a cost and quality drift goes unnoticed.</li>
+      <li><b>Ephemeral by design.</b> Uploads are deleted after 24 hours by the app itself, which is what lets the privacy note on the home page be true. The in-memory rate-limit store resets on deploy, an accepted trade-off at this scale, documented so it isn't a surprise later.</li>
+      <li><b>Monitoring, the part that's not built (v5).</b> Log one row per real upload: photo hash, view, score, confidence, model, latency, tokens, cost, and a thumbs up or down. No pixels. Store it somewhere that survives a deploy (a Railway volume with SQLite is enough), export a weekly sample into the repo, hand-label a handful, and chart the score distribution over time. That closes the loop between "how it does on my 54 photos" and "how it does on yours".</li>
+    </ul>
+  </details>
+</section>
+
+<section>
+  <h3>Method sources</h3>
+  <ul>
+    <li>Hamel Husain and Shreya Shankar, <a href="https://hamel.dev/blog/posts/evals-faq/">AI Evals: Everything You Need to Know</a>. Error analysis before metrics, binary labels first, sample by dimensions, why LLM judges need validation.</li>
+    <li><a href="https://arxiv.org/abs/2510.27106">Rating Roulette: Self-Inconsistency in LLM-as-a-Judge Frameworks</a>. Why the same input gets different scores, why temperature 0 isn't a fix, and why to aggregate runs.</li>
+  </ul>
+  <h3>Photo credits</h3>
+  <p class="small">Test-set photos are from Wikimedia Commons under CC0, CC BY, CC BY-SA and public-domain licences, plus {{ c.synthetic if c else 5 }} AI-generated images. Every photo's author, licence and source page is in <a href="https://github.com/shhirl/fixmybanana/blob/main/eval/labels.csv">eval/labels.csv</a>, so the credits live with the data and can't go stale.</p>
+</section>
+
+<footer class="pf">
+  <p>I'm Shirley He. I build AI products and teach people how to judge them. More work at <a href="https://www.whirleyworld.com">whirleyworld.com</a> · say hello on <a href="https://www.linkedin.com/in/shhirl">LinkedIn</a> · code on <a href="https://github.com/shhirl">GitHub</a> · <a href="/">try the tool</a>.</p>
+</footer>
+</body>
+</html>

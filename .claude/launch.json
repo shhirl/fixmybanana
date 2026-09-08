@@ -1,0 +1,6 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "flask", "runtimeExecutable": ".venv/bin/python", "runtimeArgs": ["-m", "flask", "--app", "app", "run", "--port", "5055"], "port": 5055 }
+  ]
+}

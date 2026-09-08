@@ -311,6 +311,44 @@ def index():
     feedback_submitted = request.args.get('submitted') == '1'
     return render_template('index.html', feedback_submitted=feedback_submitted)
 
+@app.route('/how-its-built')
+def how_its_built():
+    """Static lab-notebook page. All numbers come from files the eval scripts write (eval/results/summary.json,
+    eval/results/v0-taxonomy.json, eval/v0/raw_response.json, eval/labels.csv); missing files degrade gracefully."""
+    import csv
+    from collections import Counter
+    base = os.path.dirname(os.path.abspath(__file__))
+
+    def load_json(rel):
+        try:
+            with open(os.path.join(base, rel)) as f:
+                return json.load(f)
+        except (OSError, ValueError):
+            return None
+
+    summary = load_json('eval/results/summary.json') or {}
+    counts = None
+    try:
+        with open(os.path.join(base, 'eval/labels.csv'), newline='') as f:
+            rows = list(csv.DictReader(f))
+        hs = [r for r in rows if r['is_handstand'] == 'yes']
+        counts = dict(n=len(rows), hs=len(hs), ctl=len(rows) - len(hs),
+                      view=Counter(r['view'] for r in hs), support=Counter(r['support'] for r in hs),
+                      quality=Counter(r['quality'] for r in hs),
+                      commons=sum('Commons' in r['source'] and 'derived' not in r['source'] for r in rows),
+                      derived=sum('derived' in r['source'] for r in rows),
+                      synthetic=sum('synthetic' in r['source'] for r in rows))
+    except (OSError, KeyError):
+        pass
+    prompt_md = None
+    try:
+        with open(os.path.join(base, 'eval/v0/prompt.md')) as f:
+            prompt_md = f.read()
+    except OSError:
+        pass
+    return render_template('how_its_built.html', v0=summary.get('v0'), tax=load_json('eval/results/v0-taxonomy.json'),
+                           raw=load_json('eval/v0/raw_response.json'), prompt_md=prompt_md, c=counts)
+
 @app.route('/upload', methods=['POST'])
 @limiter.limit("5 per day")
 @limiter.limit("50 per day", key_func=lambda: "global_upload")
