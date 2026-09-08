@@ -21,14 +21,36 @@ Adding a page to a site whose core feature returns "All Vision Models Failed" is
 - [ ] PR → merge → confirm a real upload returns a verdict → tag `look-2026-MM-DD-fix-vision`.
 - Undo: revert the merge commit. Nothing visual changes in this PR, so no screenshot set needed.
 
-## Phase 2 — Build the new page (per the eval plan)
-- [ ] Branch `eval-page`.
-- [ ] Add route in `app.py` + new template in `templates/` extending `base.html` (same card-on-tiled-background look, same footer). Keep the upload-preview background-tiling feature untouched.
-- [ ] Add a link to the new page from the homepage only if the plan asks for one; if so, that is a separate tiny PR (`nav-link-eval`) so it can be reverted alone.
-- [ ] Verify: all templates render, `GET /` and `GET /<new-page>` return 200, rate-limit page still renders.
-- [ ] Screenshots: `docs/screenshots/YYYY-MM-DD-before-eval-page/` (the live site) and `.../after-eval-page/` (once deployed), desktop + mobile.
-- [ ] PR → Shirley merges → tag `look-YYYY-MM-DD-eval-page`.
-- Undo: `git revert -m 1 <merge-commit>` on a branch → PR → merge. Or Railway one-click rollback, then still revert in git.
+## Phase 2 — Ship `/how-its-built` at v0 + v2 (spec: `fixmybanana-eval-plan.md`, v1 schema: `fixmybanana-prompt-and-schema.md`)
+
+Eval-plan "immediate to-dos" status: screenshots ✅ (`docs/screenshots/2026-09-08-baseline/`), tag `v0` ✅ (= `baseline-2026-09-08`), the rest below.
+
+### 2a. v0 receipts (docs-only → main)
+- [ ] `eval/v0/prompt.md`: the classifier system prompt + few-shot messages copied verbatim from `app.py` (`analyze_handstand_posture`) and the feedback prompt (`get_banana_back_feedback`).
+- [ ] `eval/v0/raw_response.json`: one real OpenAI response, verbatim. Needs Phase 1 done (a working call).
+- [ ] `CHANGELOG.md` at repo root: one entry per version (v0 = 2026-09-08 state).
+
+### 2b. Eval harness (branch `eval-harness`; touches no page, so no screenshots)
+- [ ] `eval/run_eval.py`: for each photo in `eval/testset/`, call the *same* classifier code the site uses (import from `app.py`, don't copy the prompt) N=5 times; write `eval/results/v0.csv` with columns `photo, run, model, label, raw_text, latency_s, prompt_tokens, completion_tokens, cost_usd`. `--runs`, `--version` flags. Cost note printed at the end.
+- [ ] `eval/labels.csv` template: `photo, axis_view, axis_support, axis_quality, is_handstand, shirley_score_0_10, shirley_label, feedback_usable_pass`.
+- [ ] `eval/README.md`: how to run, what the columns mean, how to add photos.
+- [ ] Shirley: collect 30–50 photos along the axes (freestanding/wall, side/front, mirror, poor lighting, not-a-handstand controls) into `eval/testset/`, fill `labels.csv`. Decide whether to publish the photos or a sample (privacy of people in them).
+
+### 2c. Run v0 eval + error analysis
+- [ ] Run `run_eval.py --version v0 --runs 5`, commit `eval/results/v0.csv`.
+- [ ] `eval/results/v0-analysis.md`: pass rate, ±1-banana agreement, per-photo spread across 5 runs, failure taxonomy with counts. Read every failure before writing metrics.
+- [ ] Optional: `eval/summarize.py` computes those numbers from the CSV so later versions reuse it.
+
+### 2d. The page (branch `how-its-built`; visual → before/after screenshots + tag)
+- [ ] `app.py`: `GET /how-its-built` → `templates/how_its_built.html` (extends `base.html`; same card + banana background + footer).
+- [ ] Page content: short intro; `#v0` block (what/why, prompt screenshot or snippet, eval table, cost/analysis); `#v2` block (test set design, labelling, taxonomy, the "same photo, five scores" chart); "Not done / next" list from the eval plan §4; link to the GitHub repo.
+- [ ] Separate tiny PR `nav-link-how-its-built`: header link "How it's built" on every page + one line under the result card: "Evaluated on N photos · agrees with me X% · see how" (numbers read from `eval/results/` or hard-coded constants in one place).
+- [ ] Verify: all templates render, `GET /how-its-built` 200, mobile check, screenshots before/after, PR → merge → tag `look-YYYY-MM-DD-how-its-built`.
+- [ ] Shirley: whirleyworld.com project card → `/how-its-built`; LinkedIn post with one honest number.
+
+### 2e. Later versions (one branch + PR + page block + post each)
+- v1 structured output (`response_format: json_schema` per `fixmybanana-prompt-and-schema.md`) — needs `result.html` redesign for score/label/segments/confidence.
+- v3 prompt fixes from the taxonomy; v4 model switch with cost + latency; v5 monitoring (log per-request fields listed in prompt-and-schema §5).
 
 ## Phase 3 — Safety upgrades (optional, after the above)
 - [ ] `test_app.py` smoke test + GitHub Action so a PR cannot merge if a template breaks.
