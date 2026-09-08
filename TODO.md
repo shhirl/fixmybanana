@@ -7,7 +7,7 @@ Living doc. Add new items at the top of each section. Move done items to "Done" 
 ## Now / next
 
 - [ ] **Small PR: `friendly_ai_error` should distinguish OpenAI `insufficient_quota` (no credits → "temporarily unavailable") from a real rate limit ("try again tomorrow").** Check `insufficient_quota` in the 429 body. Side finding from the 2026-09-08 outage: `gpt-5.6-terra` / `gpt-5.6-sol` are valid ids (useful for v4).
-- [ ] **`/how-its-built` initiative — started 2026-09-08.** Spec: `docs/plans/fixmybanana-eval-plan.md`; ordered steps: `docs/plans/2026-09-08-execution-plan.md` (Phase 2); v1 JSON schema + prompt: `docs/plans/fixmybanana-prompt-and-schema.md`. Baseline screenshots in `docs/screenshots/2026-09-08-baseline/`; code baseline = tags `v0` / `baseline-2026-09-08`. Phase 1 done. Phase 2a in progress: `eval/v0/prompt.md` + `CHANGELOG.md` done; **Shirley: run `OPENAI_API_KEY=sk-... .venv/bin/python eval/capture_v0.py <photo.jpg>` and commit `eval/v0/raw_response.json`.** Then Phase 2b: Claude builds `eval/run_eval.py`; **Shirley collects + labels the test set per `eval/testset/README.md`** (the two can happen in parallel).
+- [ ] **`/how-its-built` initiative — started 2026-09-08.** Spec: `docs/plans/fixmybanana-eval-plan.md`; ordered steps: `docs/plans/2026-09-08-execution-plan.md` (Phase 2); v1 JSON schema + prompt: `docs/plans/fixmybanana-prompt-and-schema.md`. Baseline screenshots in `docs/screenshots/2026-09-08-baseline/`; code baseline = tags `v0` / `baseline-2026-09-08`. Phase 1 done. Phase 2a in progress: `eval/v0/prompt.md` + `CHANGELOG.md` done; **Shirley: run `OPENAI_API_KEY=sk-... .venv/bin/python eval/capture_v0.py <photo.jpg>` and commit `eval/v0/raw_response.json`.** Then Phase 2b: Claude builds `eval/run_eval.py`; **Test set collected 2026-09-08 (49 CC photos, pre-labelled by Claude) — Shirley reviews `eval/labels.csv` and fills `shirley_score_0_10` / `shirley_label`.**
 - [ ] **Housekeeping:** remote branch `improve-feedback-response` (v1) is unmerged and superseded by v2 (merged) — safe to delete on GitHub. `brand-and-share` and `improve-feedback-response-v2` are merged and can be deleted too.
 - [ ] **Merge PR #7** (`dedupe-footer-link`) — removes the redundant whirleyworld.com footer link ("Built by Shirley He" already links there). One-line change; merging deploys it.
 - [ ] **Phone-test the share card on the live site.** Upload a photo → tap "Share it" → native share sheet should open with the score-card PNG attached. Desktop should download the PNG + copy share text. (Client-side JS — never manually tested; costs one OpenAI call + one of the 5/day rate-limit slots.)
@@ -38,6 +38,9 @@ Living doc. Add new items at the top of each section. Move done items to "Done" 
 
 ## Decisions made
 
+- **2026-09-08 — Test-set photos are Creative-Commons images from Wikimedia Commons, committed to the public repo with attribution.**
+  Why: the eval must be reproducible by anyone reading `/how-its-built`, and Shirley has no rights to redistribute Google-Images results or photos of students. CC0/CC BY/CC BY-SA/public-domain images can be republished if credited.
+  How to apply: every row in `eval/labels.csv` carries licence + author + source URL; the page gets a credits line. Don't add a photo without a licence you can name. Files are capped at 1600 px longest side to keep the repo small (~14 MB for 49 files).
 - **2026-07-23 — Branch + PR for behavior changes; direct-to-main only for docs.**
   Why: Railway auto-deploys every push to `main`, so `git push` = "deploy to live site." The healthcheck (`/`) catches boot failures but not 200-but-broken bugs (template/JS breakage). A PR is the deliberate "ready to be live?" checkpoint and keeps main always-deployable.
   How to apply:
