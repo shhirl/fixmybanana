@@ -2,9 +2,9 @@
 
 One entry per version shown on `/how-its-built`. Newest first. Each version has a git tag.
 
-## v0 — 2026-09-08 (tag `v0`, also `baseline-2026-09-08`)
+## v0 — September 2025 (original build; tag `v0` marks its last commit, 2026-07-23)
 
-The site as it was first built and used. Free-text prompt, no structured output, no eval.
+The site as it was first built in September–October 2025 and used since, with small updates through July 2026. Free-text prompt, no structured output, no eval.
 
 - One page: upload a photo → verdict card (good form / banana back / error) → shareable score card.
 - Two OpenAI chat-completions calls, both with the photo attached:
@@ -14,7 +14,6 @@ The site as it was first built and used. Free-text prompt, no structured output,
 - Rate limits: 5 uploads/day per IP, 50/day global. Uploads purged after 24h.
 - Receipts: `eval/v0/prompt.md` (verbatim prompts), `eval/v0/raw_response.json` (one real response), screenshots in the page itself (`static/how-its-built/`).
 
-### Post-v0 fixes on 2026-09-08 (not a new version)
+### Fixes on 2026-09-08 (not a new version)
 
 - PR #8: log OpenAI status + body per failed call; friendlier user message; `gpt-5.6-terra` and `gpt-5.6-sol` appended as fallbacks.
-- Outage 2026-09-08: every upload failed because the OpenAI account had no prepaid credits (`credit_balance_exhausted`). Fixed by adding credits. Lesson for the page: the app had swallowed the error body, so the cause was invisible until logging was added.
