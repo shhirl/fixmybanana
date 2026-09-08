@@ -30,7 +30,7 @@ Numbers are just order; they never change once assigned. JPEG or PNG, longest si
 | `view` / `support` / `quality` / `mirror` | the axis values above |
 | `is_handstand` | `yes` or `no` (controls are `no`) |
 | `shirley_score_0_10` | your banana score: 0 = ruler-straight, 10 = full croissant. Blank for controls. |
-| `shirley_label` | `good form` or `banana back` — the v0 binary. Rule of thumb: score ≤ 3 → good form, ≥ 6 → banana back, 4–5 → your call, but write it down. |
+| `shirley_label` | `good form` or `banana back` — the v0 binary. **Rule used (2026-09-08): score 0–5 → good form, 6–10 → banana back.** Matches the v0 prompt's "clear arch" definition and the v1 schema bands (3–5 = slight curve, 6–8 = proper banana). Derived from the score by script; override by hand if a 4–5 photo clearly is a banana. |
 | `feedback_usable` | after seeing the model's feedback for this photo: `pass` if a coach would say it's correct and actionable, `fail` otherwise. Leave blank until an eval has run. |
 | `notes` | anything a second labeller would need ("hips slightly forward but ribs tucked — borderline") |
 | `source` | `own`, `friend-ok`, `student-ok`, or a CC licence + URL |
