@@ -39,7 +39,7 @@ Label **before** looking at any model output, so the model can't anchor you. Do 
 
 ## 4. Privacy — decide before pushing
 
-Photos of other people go public with the repo. Options: (a) only photos you have explicit permission for, (b) keep `testset/` out of git (`.gitignore`) and publish just `labels.csv` + results, with 3–5 sample photos in `eval/testset/sample/`. Write the decision in `TODO.md` "Decisions made".
+Photos of other people go public with the repo. Options: (a) only photos you have explicit permission for, (b) keep `testset/` out of git (`.gitignore`) and publish just `labels.csv` + results, with 3–5 sample photos in `eval/testset/sample/`. Write the decision in the private notes repo (`notes/TODO.md`, "Decisions made").
 
 ## 5. Done when
 

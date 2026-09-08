@@ -14,3 +14,6 @@ uploads/
 
 # OS
 .DS_Store
+
+# private working notes (separate repo shhirl/fixmybanana-notes, cloned here)
+notes/
