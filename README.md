@@ -53,7 +53,7 @@ fixmybanana/
 │   └── 429.html           # Rate-limit page
 ├── static/                # Images (demo, background, reactions)
 ├── uploads/               # User uploads (auto-created, purged after 24h)
-└── TODO.md                # Living decisions log
+└── notes/                 # private working notes (separate repo, gitignored)
 ```
 
 ---
