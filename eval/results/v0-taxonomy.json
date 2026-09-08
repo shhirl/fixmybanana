@@ -1,0 +1,20 @@
+[
+  {"name": "Refuses, and the app shows the cut-off refusal as the verdict",
+   "count": 10, "examples": ["004", "020", "029", "030", "032", "035", "038", "039", "040", "022"],
+   "cause": "The prompt insists on a side-on photo; on anything else the model hedges (\"I'm unable to classify…\"). max_tokens=5 truncates the hedge, the string match finds neither label, and the fragment is shown to the user. 8 of the 12 front/back photos end here."},
+  {"name": "Front and back views: guesses or refuses instead of saying it can't judge",
+   "count": 8, "examples": ["029", "030", "032", "035", "036", "038", "039", "040"],
+   "cause": "Only 4 of 12 front/back photos come out right. The arch is invisible from the front; the model has no field for \"can't see the spine\", so it either refuses (row above) or answers with side-view confidence."},
+  {"name": "Misses a clear arch (calls a banana back \"good form\")",
+   "count": 5, "examples": ["006", "023", "027", "036", "049"],
+   "cause": "Legs split or bent, silhouettes at dusk, and a low-resolution copy. The model reads the leg line as the body line; when the torso has no contrast it defaults to \"good form\". 049 is the downscaled copy of a photo it labels correctly at full size."},
+  {"name": "Over-calls an arch on straight-ish photos (my score 3 to 5)",
+   "count": 6, "examples": ["011", "013", "014", "026", "028", "052"],
+   "cause": "Slightly piked hips, a one-arm balance, a night shot and a dark garage. Dark or unusual photos push it toward \"banana back\", the label its examples describe in most detail."},
+  {"name": "Coin-flip on borderline photos: different answers across the five runs",
+   "count": 8, "examples": ["010", "011", "013", "014", "022", "035", "038", "040"],
+   "cause": "Temperature 0 does not make the arg-max stable when the two labels are nearly tied. These are the photos a 0–10 score would place at 4 to 6; the binary prompt has no way to express that."},
+  {"name": "Controls: no way to say \"not a handstand\"",
+   "count": 7, "examples": ["041", "042", "043", "044", "045", "046", "053"],
+   "cause": "Six of seven controls are refused, which is the right instinct shown as a broken message. The bronze statue of a handstand is scored \"banana back\" five times out of five."}
+]
