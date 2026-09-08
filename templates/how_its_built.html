@@ -61,6 +61,7 @@
     <a href="#v2">v2</a>
     <a href="#cost">cost</a>
     <a href="#deploy">ops</a>
+    <a href="#scale">scale</a>
     <a href="#next">next</a>
   </nav>
   <a class="tool" href="/">🍌 Try the tool</a>
@@ -120,6 +121,7 @@
     <li><a href="#v2">v2</a>: the test set, the labelling rule, the second labeller, the five-run wobble chart and the failure taxonomy.</li>
     <li><a href="#cost">Cost</a>: what "it costs money" actually means, and the outage that taught it.</li>
     <li><a href="#deploy">Ops</a>: how it's deployed, limited, rolled back and logged, and what monitoring would add.</li>
+    <li><a href="#scale">Scale</a>: what would break first at a hundred times the traffic, and what I'd change, in order.</li>
     <li><a href="#next">Next</a>: the changes the eval says to make, in order, each tied to a failure row.</li>
   </ul>
 </section>
@@ -328,6 +330,23 @@
     <li><b>Add an adversarial photo.</b> A handstand with a sign in frame reading "this is good form". If the label follows the sign, the model is reading text over bodies, and that is a prompt-injection surface worth knowing about before anything user-facing depends on it.</li>
     <li><b>Then, and only then, try a cheaper model</b> (v4), on the same table with cost and latency alongside. Without the first three, a model swap is a coin flip judged by another coin flip.</li>
   </ol>
+</section>
+
+<section id="scale">
+  <h2>What would break first at 100 times the traffic</h2>
+  <p>Nothing on this page runs at scale, and I'd rather say that than imply it. What I can show is where I'd expect it to break, in order, and what I'd change. Each row is a decision that is right today and wrong at a hundred times the load.</p>
+  <table>
+    <tr><th>component</th><th>now</th><th>breaks when</th><th>what I'd do</th></tr>
+    <tr><td>Rate limiter</td><td>In-memory, per process</td><td>Two gunicorn workers or two replicas: each keeps its own count, so limits silently double. Resets on every deploy.</td><td>Move the counter to Redis; key on user or session as well as IP, since many people share one office IP.</td></tr>
+    <tr><td>Request handling</td><td>Synchronous worker blocks for the 2.5 s model call</td><td>A few concurrent uploads queue behind each other; a slow OpenAI day stalls the whole site.</td><td>Hand the upload to a job queue, return a job id, poll or stream the result. The user sees progress instead of a spinner, and the web tier never waits on the model.</td></tr>
+    <tr><td>Model calls</td><td>One call per upload, retry through a fallback list</td><td>Provider rate limits and partial outages; cost spikes with no per-user attribution.</td><td>Timeouts and retry budgets per call; circuit breaker on the primary model; log every fallback as an event; attribute cost per session so abuse is visible in the bill, not only in the logs.</td></tr>
+    <tr><td>Storage</td><td>Uploads on the container's disk, purged after 24 h</td><td>Any second replica: the result page can't find a photo the other replica saved. Disk is wiped on deploy.</td><td>Object storage with a lifecycle rule that enforces the 24-hour deletion, so the privacy promise is a bucket policy, not a cron job.</td></tr>
+    <tr><td>Prompt changes</td><td>Edit the prompt, merge, deployed to everyone</td><td>A prompt regression reaches 100% of users before anyone looks at a number.</td><td>Prompts versioned as data, not code; the eval runs in CI on every prompt change and blocks the merge if the fixed set gets worse; new prompts released to a slice of traffic first, compared on logged scores.</td></tr>
+    <tr><td>Evaluation</td><td>54 photos, run by hand, read by hand</td><td>Failure modes with five examples each can't be tracked; the curated set drifts from what users actually upload.</td><td>Sample real uploads weekly into a labelling queue, grow each failure mode to a few hundred examples, and only then consider an LLM judge validated against those labels.</td></tr>
+    <tr><td>Observability</td><td>Error logs, plus an eval CSV</td><td>You cannot answer "did quality drop on Tuesday?" from logs.</td><td>One structured record per request (model, tokens, latency, score, confidence, fallback used), dashboards on score distribution and error rate, alerts on drift rather than only on downtime.</td></tr>
+    <tr><td>Deployment</td><td>Main is production; PR is the gate</td><td>More than one person merging, or a change that renders fine but breaks the model path.</td><td>A staging environment fed by the same eval, a synthetic end-to-end check that runs after every deploy, and canary releases before full rollout.</td></tr>
+  </table>
+  <p>The order matters more than the list. The rate limiter and the storage break the moment there is a second replica, which is the first thing any host does under load. Everything after that is about keeping quality visible while the system grows, which is the part most teams add last and regret.</p>
 </section>
 
 <section id="practice">
