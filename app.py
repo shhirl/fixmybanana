@@ -306,6 +306,16 @@ def analyze_handstand_posture(image_path):
             'detailed_feedback': None
         }
 
+@app.context_processor
+def inject_eval_summary():
+    """Makes the latest eval headline available to every template (header link + result-card line)."""
+    try:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'eval/results/summary.json')) as f:
+            v = json.load(f).get('v0') or {}
+        return dict(eval_summary=dict(n_photos=v.get('n_photos'), majority_pct=v.get('majority_pct')))
+    except (OSError, ValueError):
+        return dict(eval_summary=None)
+
 @app.route('/')
 def index():
     feedback_submitted = request.args.get('submitted') == '1'
