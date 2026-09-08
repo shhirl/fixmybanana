@@ -50,10 +50,11 @@ Photos of other people go public with the repo. Options: (a) only photos you hav
 
 ## 6. What is in the set as of 2026-09-08 (collected by Claude, awaiting Shirley's review)
 
-49 files: 43 handstands + 6 controls. All from Wikimedia Commons under CC0 / CC BY / CC BY-SA / public domain, with licence, author and page URL in `labels.csv` → `source`. Three files (047–049) are degraded copies of real photos in the set (darkened, blurred, downscaled) to test robustness; they are marked `derived`.
+54 files: 47 handstands + 7 controls.
+- 46 from Wikimedia Commons (CC0 / CC BY / CC BY-SA / public domain; licence, author, page URL in `labels.csv` → `source`).
+- 3 derived copies of real photos in the set (047–049: darkened, blurred, downscaled) to test robustness.
+- 5 AI-generated (050–054, Higgsfield `soul_2`, ~1 credit total) to fill the two axes Commons lacks: wall-assisted and mirror shots. Marked `synthetic` in `source`; no real person. 050 has questionable anatomy — Shirley decides whether to keep it.
 
-Coverage: view side 31 / front 9 / back 2 / angled 1 · support freestanding 39 / wall 4 · quality good 34, dark 5, low_res 3, blurry 1 · Claude's first-pass labels: 15 good form, 28 banana back.
-
-Known gaps: only 4 wall-assisted photos and **no mirror shots** — Commons has almost none. Options: Shirley's own phone photos, or a handful of AI-generated fillers marked `source=synthetic`. Decide and note it here.
+Coverage (handstands): view side 34 / front 9 / back 3 / angled 1 · support freestanding 41 / wall 6 · mirror 2 (+1 mirror control) · quality good 37, dark 6, low_res 3, blurry 1 · Claude first pass: 17 good form, 30 banana back.
 
 `claude_score_0_10` / `claude_label` are a first pass from Claude to speed up review — **Shirley's columns are the ground truth**; fill them without looking at the Claude columns first if you want a clean second-labeller comparison.

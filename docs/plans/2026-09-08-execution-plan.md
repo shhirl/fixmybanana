@@ -31,10 +31,10 @@ Eval-plan "immediate to-dos" status: screenshots ✅ (`docs/screenshots/2026-09-
 - [x] `CHANGELOG.md` at repo root: one entry per version (v0 = 2026-09-08 state).
 
 ### 2b. Eval harness (branch `eval-harness`; touches no page, so no screenshots)
-- [ ] `eval/run_eval.py`: for each photo in `eval/testset/`, call the *same* classifier code the site uses (import from `app.py`, don't copy the prompt) N=5 times; write `eval/results/v0.csv` with columns `photo, run, model, label, raw_text, latency_s, prompt_tokens, completion_tokens, cost_usd`. `--runs`, `--version` flags. Cost note printed at the end.
-- [ ] `eval/labels.csv` template: `photo, axis_view, axis_support, axis_quality, is_handstand, shirley_score_0_10, shirley_label, feedback_usable_pass`.
+- [x] `eval/run_eval.py` (written 2026-09-08, not yet run — needs `.env` with the key): for each photo in `eval/testset/`, call the *same* classifier code the site uses (import from `app.py`, don't copy the prompt) N=5 times; write `eval/results/v0.csv` with columns `photo, run, model, label, raw_text, latency_s, prompt_tokens, completion_tokens, cost_usd`. `--runs`, `--version` flags. Cost note printed at the end.
+- [x] `eval/labels.csv` (54 rows, Claude first-pass; Shirley fills her columns) — original template spec: `photo, axis_view, axis_support, axis_quality, is_handstand, shirley_score_0_10, shirley_label, feedback_usable_pass`.
 - [ ] `eval/README.md`: how to run, what the columns mean, how to add photos.
-- [ ] Shirley: collect 30–50 photos along the axes — **full instructions in `eval/testset/README.md`** (axes, counts, naming, labelling rules, privacy) (freestanding/wall, side/front, mirror, poor lighting, not-a-handstand controls) into `eval/testset/`, fill `labels.csv`. Decide whether to publish the photos or a sample (privacy of people in them).
+- [x] Test set collected (54 files, see `eval/testset/README.md` §6). Shirley: review + label. Original brief: collect 30–50 photos along the axes — **full instructions in `eval/testset/README.md`** (axes, counts, naming, labelling rules, privacy) (freestanding/wall, side/front, mirror, poor lighting, not-a-handstand controls) into `eval/testset/`, fill `labels.csv`. Decide whether to publish the photos or a sample (privacy of people in them).
 
 ### 2c. Run v0 eval + error analysis
 - [ ] Run `run_eval.py --version v0 --runs 5`, commit `eval/results/v0.csv`.
