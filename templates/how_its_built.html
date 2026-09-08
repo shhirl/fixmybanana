@@ -56,6 +56,7 @@
   <nav class="vnav">
     <a href="#problem">problem</a>
     <a href="#tradeoffs">trade-offs</a>
+    <a href="#takeaways">takeaways</a>
     <a href="#v0">v0</a>
     <span>v1</span>
     <a href="#v2">v2</a>
@@ -124,6 +125,18 @@
     <li><a href="#scale">Scale</a>: what would break first at a hundred times the traffic, and what I'd change, in order.</li>
     <li><a href="#next">Next</a>: the changes the eval says to make, in order, each tied to a failure row.</li>
   </ul>
+</section>
+
+<section id="takeaways" class="tri">
+  <h2><span class="n">4 · WHAT I TOOK AWAY</span>Five things I'd carry into any AI build</h2>
+  <ol>
+    <li><b>Measure before you improve, because the eval reorders the roadmap.</b> Before the numbers, the obvious next step was a better prompt. After them, the biggest failure was an interface bug: a five-token limit turning a polite refusal into a broken verdict on 42 of 235 runs. No prompt tuning fixes that; a schema does. The eval cost $1.24 and changed what I'd build next.</li>
+    <li><b>The label is a design decision, and it has its own error bar.</b> A binary "banana or not" felt obvious and turned out to be the noisiest part of the system: two careful labellers agreed on 66% of photos, kappa 0.32. A model can't beat the target's own noise. Ask for a score with a tolerance band, and publish the inter-rater number as the ceiling.</li>
+    <li><b>Non-determinism is something to measure, not hide.</b> Temperature 0 still gave different answers to the same photo on 17% of the set. Running five times costs cents and turns a surprise into a signal: the spread marks the photos the model is unsure about even though it never says so. In production, that is the cheapest confidence estimate you can get.</li>
+    <li><b>Give the model a way out.</b> Most of the failures were the absence of "I can't tell": front views, a statue, a plank, all forced into a yes or no. A usable-photo flag and a confidence field with a reason remove a whole class of errors by construction, and they make the product feel honest instead of confident.</li>
+    <li><b>Make failures say why, and treat cost as a stock, not just a rate.</b> The site was silently dead because a prepaid balance hit zero and the code discarded the error body. Caps limit spend rate; a balance runs out. Log the status and body of every failed call, distinguish "out of quota" from "rate-limited", and check the model path end to end, because a home page returning 200 proves nothing.</li>
+  </ol>
+  <p>Everything below is the evidence for those five sentences.</p>
 </section>
 
 <section>
