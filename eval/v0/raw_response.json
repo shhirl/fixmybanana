@@ -1,0 +1,161 @@
+{
+  "captured_at": "2026-09-08T16:54:42+00:00",
+  "photo": "eval/testset/015_side_freestanding_beach-new-digha.jpg",
+  "site_result": {
+    "analysis": "banana back",
+    "form_quality": "bad",
+    "detailed_feedback": "In this handstand, the 'banana back' form is evident due to the pronounced arch in the lower back, causing the spine to curve rather than remain straight. The hips are not aligned over the shoulders and wrists, contributing to the arch. The overall body line deviates from a straight line, with the legs and feet extending backward instead of being stacked directly over the body. To improve, focus on engaging the core and tucking the pelvis to achieve a straighter alignment."
+  },
+  "calls": [
+    {
+      "url": "https://api.openai.com/v1/chat/completions",
+      "request": {
+        "model": "gpt-4o",
+        "temperature": 0,
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a strict vision classifier. Goal: From a SIDE-ON photo of a handstand, output exactly one label: \"good form\" or \"banana back\". Definitions: • banana back = clear lumbar/spinal arch; ribs flare forward; hips in front of shoulders;   legs/feet drift behind the body, making a C/banana shape. • good form = wrists–shoulders–hips–ankles vertically stacked; neutral spine; ribs tucked;   no visible midsection curve. Rules: Output ONLY one of these strings with no punctuation or explanation."
+          },
+          {
+            "role": "user",
+            "content": "Side-on handstand description: hips are ahead of the shoulder line, lower back is arched, chest/ribs flaring, legs trailing behind."
+          },
+          {
+            "role": "assistant",
+            "content": "banana back"
+          },
+          {
+            "role": "user",
+            "content": "Side-on handstand description: wrists, shoulders, hips, ankles form one vertical line; spine looks neutral; ribs tucked; toes stacked over hips."
+          },
+          {
+            "role": "assistant",
+            "content": "good form"
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "Classify this SIDE-ON handstand image as exactly one label: \"good form\" or \"banana back\"."
+              },
+              {
+                "type": "image_url",
+                "image_url": {
+                  "url": "data:image/jpeg;base64,<base64 image omitted>"
+                }
+              }
+            ]
+          }
+        ],
+        "max_tokens": 5
+      },
+      "status": 200,
+      "latency_s": 1.81,
+      "response": {
+        "id": "chatcmpl-ELtNeWsHGoVmKEs5n4bhKaIVrGm5f",
+        "object": "chat.completion",
+        "created": 1788886478,
+        "model": "gpt-4o-2024-08-06",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "banana back",
+              "refusal": null,
+              "annotations": []
+            },
+            "logprobs": null,
+            "finish_reason": "stop"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 1334,
+          "completion_tokens": 2,
+          "total_tokens": 1336,
+          "prompt_tokens_details": {
+            "cached_tokens": 1152,
+            "audio_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "audio_tokens": 0,
+            "accepted_prediction_tokens": 0,
+            "rejected_prediction_tokens": 0
+          }
+        },
+        "service_tier": "default",
+        "system_fingerprint": "fp_ffd8308b42"
+      }
+    },
+    {
+      "url": "https://api.openai.com/v1/chat/completions",
+      "request": {
+        "model": "gpt-4o",
+        "temperature": 0.3,
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are a handstand coach providing detailed feedback. Analyze the handstand image and explain specifically why it shows 'banana back' form. Focus on: spinal alignment, hip position, shoulder position, and overall body line. Provide constructive, specific feedback in 2-3 sentences."
+          },
+          {
+            "role": "user",
+            "content": [
+              {
+                "type": "text",
+                "text": "This handstand has been classified as 'banana back'. Please analyze the image and explain specifically why this is banana back form. What do you see in terms of spinal alignment, hip position, and overall body line?"
+              },
+              {
+                "type": "image_url",
+                "image_url": {
+                  "url": "data:image/jpeg;base64,<base64 image omitted>"
+                }
+              }
+            ]
+          }
+        ],
+        "max_tokens": 200
+      },
+      "status": 200,
+      "latency_s": 3.79,
+      "response": {
+        "id": "chatcmpl-ELtNfdGBlsaSURoLJpd1yk0gQA6Fq",
+        "object": "chat.completion",
+        "created": 1788886479,
+        "model": "gpt-4o-2024-08-06",
+        "choices": [
+          {
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "In this handstand, the 'banana back' form is evident due to the pronounced arch in the lower back, causing the spine to curve rather than remain straight. The hips are not aligned over the shoulders and wrists, contributing to the arch. The overall body line deviates from a straight line, with the legs and feet extending backward instead of being stacked directly over the body. To improve, focus on engaging the core and tucking the pelvis to achieve a straighter alignment.",
+              "refusal": null,
+              "annotations": []
+            },
+            "logprobs": null,
+            "finish_reason": "stop"
+          }
+        ],
+        "usage": {
+          "prompt_tokens": 1215,
+          "completion_tokens": 96,
+          "total_tokens": 1311,
+          "prompt_tokens_details": {
+            "cached_tokens": 1024,
+            "audio_tokens": 0
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 0,
+            "audio_tokens": 0,
+            "accepted_prediction_tokens": 0,
+            "rejected_prediction_tokens": 0
+          }
+        },
+        "service_tier": "default",
+        "system_fingerprint": "fp_ffd8308b42"
+      }
+    }
+  ]
+}

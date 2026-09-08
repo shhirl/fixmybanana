@@ -1,0 +1,953 @@
+{
+ "v0": {
+  "version": "v0",
+  "n_photos": 54,
+  "majority_ci95": [
+   45,
+   72
+  ],
+  "kappa_model_vs_shirley": 0.15,
+  "kappa_interrater": 0.32,
+  "n_handstands": 47,
+  "n_controls": 7,
+  "n_runs": 5,
+  "n_analyses": 270,
+  "n_hs_runs": 235,
+  "agreement_pct": 73,
+  "agreement_n": "140/193",
+  "majority_pct": 60,
+  "majority_n": "28/47",
+  "consistency_pct": 83,
+  "consistency_n": "39/47",
+  "unclear_runs": 42,
+  "cost_per_analysis": 0.0046,
+  "total_cost": 1.24,
+  "latency_s": 2.5,
+  "prompt_tokens_1call": 1163,
+  "models": {
+   "gpt-4o": 264,
+   "gpt-4-turbo": 6
+  },
+  "axes": {
+   "view": {
+    "side": {
+     "n": 34,
+     "agree": 22
+    },
+    "front": {
+     "n": 9,
+     "agree": 4
+    },
+    "angled": {
+     "n": 1,
+     "agree": 1
+    },
+    "back": {
+     "n": 3,
+     "agree": 1
+    }
+   },
+   "support": {
+    "freestanding": {
+     "n": 41,
+     "agree": 26
+    },
+    "wall": {
+     "n": 6,
+     "agree": 2
+    }
+   },
+   "quality": {
+    "good": {
+     "n": 37,
+     "agree": 23
+    },
+    "dark": {
+     "n": 6,
+     "agree": 3
+    },
+    "low_res": {
+     "n": 3,
+     "agree": 1
+    },
+    "blurry": {
+     "n": 1,
+     "agree": 1
+    }
+   },
+   "mirror": {
+    "no": {
+     "n": 46,
+     "agree": 27
+    },
+    "yes": {
+     "n": 1,
+     "agree": 1
+    }
+   },
+   "source": {
+    "real (Commons)": {
+     "n": 40,
+     "agree": 23
+    },
+    "derived": {
+     "n": 3,
+     "agree": 2
+    },
+    "synthetic": {
+     "n": 4,
+     "agree": 3
+    }
+   }
+  },
+  "per_photo": [
+   {
+    "photo": "001_side_freestanding_studio.jpg",
+    "id": "001",
+    "shirley_score": 1,
+    "shirley_label": "good form",
+    "runs": [
+     "good form",
+     "good form",
+     "good form",
+     "good form",
+     "good form"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "047_side_freestanding_studio_derived-dark.jpg",
+    "id": "047",
+    "shirley_score": 1,
+    "shirley_label": "good form",
+    "runs": [
+     "good form",
+     "good form",
+     "good form",
+     "good form",
+     "good form"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "dark"
+   },
+   {
+    "photo": "051_side_freestanding_synthetic-straight-by-wall.jpg",
+    "id": "051",
+    "shirley_score": 1,
+    "shirley_label": "good form",
+    "runs": [
+     "good form",
+     "good form",
+     "good form",
+     "good form",
+     "good form"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "005_side_freestanding_gymnast-training.jpg",
+    "id": "005",
+    "shirley_score": 2,
+    "shirley_label": "good form",
+    "runs": [
+     "good form",
+     "good form",
+     "good form",
+     "good form",
+     "good form"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "009_side_freestanding_locker-room.jpg",
+    "id": "009",
+    "shirley_score": 3,
+    "shirley_label": "good form",
+    "runs": [
+     "good form",
+     "good form",
+     "good form",
+     "good form",
+     "good form"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "010_side_freestanding_garden-autumn.jpg",
+    "id": "010",
+    "shirley_score": 3,
+    "shirley_label": "good form",
+    "runs": [
+     "good form",
+     "good form",
+     "banana back",
+     "good form",
+     "banana back"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "012_side_freestanding_locker-room.jpg",
+    "id": "012",
+    "shirley_score": 3,
+    "shirley_label": "good form",
+    "runs": [
+     "good form",
+     "good form",
+     "good form",
+     "good form",
+     "good form"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "013_side_freestanding_parkour.jpg",
+    "id": "013",
+    "shirley_score": 3,
+    "shirley_label": "good form",
+    "runs": [
+     "banana back",
+     "banana back",
+     "banana back",
+     "good form",
+     "good form"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "014_side_freestanding_kettlebell-base.jpg",
+    "id": "014",
+    "shirley_score": 3,
+    "shirley_label": "good form",
+    "runs": [
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back",
+     "good form"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "028_side_freestanding_red-rock-canyon.jpg",
+    "id": "028",
+    "shirley_score": 3,
+    "shirley_label": "good form",
+    "runs": [
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "low_res"
+   },
+   {
+    "photo": "034_front_freestanding_gymnast-straddle.jpg",
+    "id": "034",
+    "shirley_score": 3,
+    "shirley_label": "good form",
+    "runs": [
+     "good form",
+     "good form",
+     "good form",
+     "good form",
+     "good form"
+    ],
+    "view": "front",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "039_front_freestanding_yoga-mat.jpg",
+    "id": "039",
+    "shirley_score": 3,
+    "shirley_label": "good form",
+    "runs": [
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear"
+    ],
+    "view": "front",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "040_front_freestanding_studio-front.jpg",
+    "id": "040",
+    "shirley_score": 3,
+    "shirley_label": "good form",
+    "runs": [
+     "good form",
+     "unclear",
+     "good form",
+     "unclear",
+     "good form"
+    ],
+    "view": "front",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "020_side_freestanding_football-freestyler.jpg",
+    "id": "020",
+    "shirley_score": 4,
+    "shirley_label": "good form",
+    "runs": [
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "038_front_freestanding_beach.jpg",
+    "id": "038",
+    "shirley_score": 4,
+    "shirley_label": "good form",
+    "runs": [
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear",
+     "banana back"
+    ],
+    "view": "front",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "052_side_wall_synthetic-dark-garage.jpg",
+    "id": "052",
+    "shirley_score": 4,
+    "shirley_label": "good form",
+    "runs": [
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back"
+    ],
+    "view": "side",
+    "support": "wall",
+    "quality": "dark"
+   },
+   {
+    "photo": "008_side_freestanding_stage-acrobat.jpg",
+    "id": "008",
+    "shirley_score": 5,
+    "shirley_label": "good form",
+    "runs": [
+     "good form",
+     "good form",
+     "good form",
+     "good form",
+     "good form"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "dark"
+   },
+   {
+    "photo": "011_side_freestanding_park.jpg",
+    "id": "011",
+    "shirley_score": 5,
+    "shirley_label": "good form",
+    "runs": [
+     "banana back",
+     "good form",
+     "good form",
+     "banana back",
+     "banana back"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "024_side_freestanding_desert-sunset-silhouette.jpg",
+    "id": "024",
+    "shirley_score": 5,
+    "shirley_label": "good form",
+    "runs": [
+     "good form",
+     "good form",
+     "good form",
+     "good form",
+     "good form"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "dark"
+   },
+   {
+    "photo": "026_side_freestanding_night-b-w.jpg",
+    "id": "026",
+    "shirley_score": 5,
+    "shirley_label": "good form",
+    "runs": [
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "dark"
+   },
+   {
+    "photo": "030_front_wall_against-wooden-door.jpg",
+    "id": "030",
+    "shirley_score": 5,
+    "shirley_label": "good form",
+    "runs": [
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear"
+    ],
+    "view": "front",
+    "support": "wall",
+    "quality": "good"
+   },
+   {
+    "photo": "037_front_freestanding_gymnast-front.jpg",
+    "id": "037",
+    "shirley_score": 5,
+    "shirley_label": "good form",
+    "runs": [
+     "good form",
+     "good form",
+     "good form",
+     "good form",
+     "good form"
+    ],
+    "view": "front",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "054_back_freestanding_synthetic-mirror-studio.jpg",
+    "id": "054",
+    "shirley_score": 5,
+    "shirley_label": "good form",
+    "runs": [
+     "good form",
+     "good form",
+     "good form",
+     "good form",
+     "good form"
+    ],
+    "view": "back",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "016_side_freestanding_beach.jpg",
+    "id": "016",
+    "shirley_score": 6,
+    "shirley_label": "banana back",
+    "runs": [
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "023_side_freestanding_child-gymnast.jpg",
+    "id": "023",
+    "shirley_score": 6,
+    "shirley_label": "banana back",
+    "runs": [
+     "good form",
+     "good form",
+     "good form",
+     "good form",
+     "good form"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "025_side_freestanding_b-w-beach-silhouette.jpg",
+    "id": "025",
+    "shirley_score": 6,
+    "shirley_label": "banana back",
+    "runs": [
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "low_res"
+   },
+   {
+    "photo": "027_side_freestanding_lake-at-dusk.jpg",
+    "id": "027",
+    "shirley_score": 6,
+    "shirley_label": "banana back",
+    "runs": [
+     "good form",
+     "good form",
+     "good form",
+     "good form",
+     "good form"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "dark"
+   },
+   {
+    "photo": "031_angled_wall_graffiti-wall.jpg",
+    "id": "031",
+    "shirley_score": 6,
+    "shirley_label": "banana back",
+    "runs": [
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back"
+    ],
+    "view": "angled",
+    "support": "wall",
+    "quality": "good"
+   },
+   {
+    "photo": "032_back_wall_pool-wall.jpg",
+    "id": "032",
+    "shirley_score": 6,
+    "shirley_label": "banana back",
+    "runs": [
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear"
+    ],
+    "view": "back",
+    "support": "wall",
+    "quality": "good"
+   },
+   {
+    "photo": "035_front_freestanding_gymnast-front-close-up.jpg",
+    "id": "035",
+    "shirley_score": 6,
+    "shirley_label": "banana back",
+    "runs": [
+     "banana back",
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear"
+    ],
+    "view": "front",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "036_back_freestanding_gymnast-seen-from-behind.jpg",
+    "id": "036",
+    "shirley_score": 6,
+    "shirley_label": "banana back",
+    "runs": [
+     "good form",
+     "good form",
+     "good form",
+     "good form",
+     "good form"
+    ],
+    "view": "back",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "049_side_freestanding_locker-room_derived-lowres.jpg",
+    "id": "049",
+    "shirley_score": 6,
+    "shirley_label": "banana back",
+    "runs": [
+     "good form",
+     "good form",
+     "good form",
+     "good form",
+     "good form"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "low_res"
+   },
+   {
+    "photo": "004_side_freestanding_gym.jpg",
+    "id": "004",
+    "shirley_score": 7,
+    "shirley_label": "banana back",
+    "runs": [
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "015_side_freestanding_beach-new-digha.jpg",
+    "id": "015",
+    "shirley_score": 7,
+    "shirley_label": "banana back",
+    "runs": [
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "017_side_freestanding_beach-bikini.jpg",
+    "id": "017",
+    "shirley_score": 7,
+    "shirley_label": "banana back",
+    "runs": [
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "018_side_freestanding_beach.jpg",
+    "id": "018",
+    "shirley_score": 7,
+    "shirley_label": "banana back",
+    "runs": [
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "019_side_freestanding_on-pillar.jpg",
+    "id": "019",
+    "shirley_score": 7,
+    "shirley_label": "banana back",
+    "runs": [
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "029_front_wall_brick-wall.jpg",
+    "id": "029",
+    "shirley_score": 7,
+    "shirley_label": "banana back",
+    "runs": [
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear"
+    ],
+    "view": "front",
+    "support": "wall",
+    "quality": "good"
+   },
+   {
+    "photo": "048_side_freestanding_beach-new-digha_derived-blurry.jpg",
+    "id": "048",
+    "shirley_score": 7,
+    "shirley_label": "banana back",
+    "runs": [
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "blurry"
+   },
+   {
+    "photo": "002_side_freestanding_beach.jpg",
+    "id": "002",
+    "shirley_score": 8,
+    "shirley_label": "banana back",
+    "runs": [
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "006_side_freestanding_rock-summit.jpg",
+    "id": "006",
+    "shirley_score": 8,
+    "shirley_label": "banana back",
+    "runs": [
+     "good form",
+     "good form",
+     "good form",
+     "good form",
+     "good form"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "021_side_freestanding_scorpion.jpg",
+    "id": "021",
+    "shirley_score": 8,
+    "shirley_label": "banana back",
+    "runs": [
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "022_side_freestanding_railway.jpg",
+    "id": "022",
+    "shirley_score": 8,
+    "shirley_label": "banana back",
+    "runs": [
+     "unclear",
+     "unclear",
+     "banana back",
+     "banana back",
+     "banana back"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "033_front_freestanding_front-view.jpg",
+    "id": "033",
+    "shirley_score": 8,
+    "shirley_label": "banana back",
+    "runs": [
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back"
+    ],
+    "view": "front",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "003_side_freestanding_locker-room.jpg",
+    "id": "003",
+    "shirley_score": 9,
+    "shirley_label": "banana back",
+    "runs": [
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "007_side_freestanding_park-festival.jpg",
+    "id": "007",
+    "shirley_score": 9,
+    "shirley_label": "banana back",
+    "runs": [
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back"
+    ],
+    "view": "side",
+    "support": "freestanding",
+    "quality": "good"
+   },
+   {
+    "photo": "050_side_wall_synthetic-extreme-arch.jpg",
+    "id": "050",
+    "shirley_score": 9,
+    "shirley_label": "banana back",
+    "runs": [
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back"
+    ],
+    "view": "side",
+    "support": "wall",
+    "quality": "good"
+   }
+  ],
+  "controls": [
+   {
+    "photo": "041_front_freestanding_control_standing-yoga-leg-ho.jpg",
+    "id": "041",
+    "note": "standing yoga leg hold",
+    "runs": [
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear"
+    ]
+   },
+   {
+    "photo": "042_side_freestanding_control_surfer.jpg",
+    "id": "042",
+    "note": "surfer",
+    "runs": [
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear"
+    ]
+   },
+   {
+    "photo": "043_side_freestanding_control_crouched-arm-balance.jpg",
+    "id": "043",
+    "note": "crouched arm balance (scorpion pose)",
+    "runs": [
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear"
+    ]
+   },
+   {
+    "photo": "044_side_freestanding_control_bronze-statue-of-han.jpg",
+    "id": "044",
+    "note": "bronze statue of handstand",
+    "runs": [
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back",
+     "banana back"
+    ]
+   },
+   {
+    "photo": "045_angled_freestanding_control_astronaut-floating-u.jpg",
+    "id": "045",
+    "note": "astronaut floating upside down",
+    "runs": [
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear"
+    ]
+   },
+   {
+    "photo": "046_side_freestanding_control_plank-on-yoga-mat.jpg",
+    "id": "046",
+    "note": "plank on yoga mat",
+    "runs": [
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear"
+    ]
+   },
+   {
+    "photo": "053_side_freestanding_synthetic-control_mirror-pike.jpg",
+    "id": "053",
+    "note": "gym mirror",
+    "runs": [
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear",
+     "unclear"
+    ]
+   }
+  ],
+  "interrater_pct": 66,
+  "interrater_n": "31/47",
+  "interrater_confusion": {
+   "good form|good form": 19,
+   "banana back|good form": 12,
+   "good form|banana back": 4,
+   "banana back|banana back": 12
+  },
+  "generated_at": "2026-09-08T16:59:27+00:00"
+ }
+}
