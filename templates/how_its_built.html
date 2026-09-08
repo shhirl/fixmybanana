@@ -91,7 +91,7 @@
     <li><b>Nobody knew if it was right.</b> Not me, not the user. There was no reference to compare against, so "it seems to work" was the only evidence.</li>
     <li><b>The same photo could get different answers.</b> Nothing measured how often, so a user who uploaded twice and got two verdicts had no way to know which to trust.</li>
     <li><b>It had no way to say "I can't tell".</b> Front views, mirrors, a plank, a statue: everything got a label or a broken message.</li>
-    <li><b>It could fail silently.</b> When the account ran out of credits, the site kept returning 200 with an error card, and the code threw away the reason.</li>
+    <li><b>It could fail silently.</b> When a billing lapse cut off the model, the site kept returning 200 with an error card, and the code threw away the reason.</li>
     <li><b>Cost was a feeling, not a number.</b> "It's cheap" is not a budget.</li>
   </ul>
   <p>The question this page answers is the one I'd ask a client about any model in production: <i>how do you know, and what does it cost to find out?</i></p>
@@ -108,7 +108,7 @@
     <tr><td>Target</td><td>Binary label (v0), 0–10 score next (v1)</td><td>Score from the start</td><td>Measure the thing that shipped first. The binary is noisier than it looks; the score is the fix, and the eval will show by how much.</td></tr>
     <tr><td>Repeats</td><td>5 runs per photo</td><td>1 run, or 20</td><td>One run hides the wobble; 20 costs four times more for a spread estimate that barely tightens. 5 is enough to see which photos are unstable. Whole run: $1.24.</td></tr>
     <tr><td>Model</td><td>gpt-4o at full image detail</td><td>A cheaper model or low-detail mode</td><td>Change one thing at a time. Model and detail level get their own row in the table (v4), judged on the same photos with cost and latency beside accuracy.</td></tr>
-    <tr><td>Spend control</td><td>App rate limits + provider cap + prepaid balance</td><td>Trusting the cap alone</td><td>Caps bound the rate, a balance is a stock; the stock is what ran out. Three layers, and a plan for the one that failed.</td></tr>
+    <tr><td>Spend control</td><td>App rate limits + provider cap + account balance</td><td>Trusting the cap alone</td><td>Caps bound the rate; a balance is a stock, and a billing lapse is what bites. Three layers, and a plan for the one that bit here.</td></tr>
     <tr><td>Privacy</td><td>Uploads deleted after 24 h, no pixels logged</td><td>Keeping uploads to build a real-traffic set</td><td>The privacy note on the home page has to stay true. Monitoring will log numbers per upload, not images.</td></tr>
     <tr><td>Deployment</td><td>Main is production, PR is the gate</td><td>A staging environment</td><td>For one developer and one page, a PR plus one-click rollback is the cheaper safety net. The gap it leaves, a page that renders but whose model calls fail, is covered by a daily synthetic check.</td></tr>
   </table>
@@ -134,7 +134,7 @@
     <li><b>The label is a design decision, and it has its own error bar.</b> A binary "banana or not" felt obvious and turned out to be the noisiest part of the system: two careful labellers agreed on 66% of photos, kappa 0.32. A model can't beat the target's own noise. Ask for a score with a tolerance band, and publish the inter-rater number as the ceiling.</li>
     <li><b>Non-determinism is something to measure, not hide.</b> Temperature 0 still gave different answers to the same photo on 17% of the set. Running five times costs cents and turns a surprise into a signal: the spread marks the photos the model is unsure about even though it never says so. In production, that is the cheapest confidence estimate you can get.</li>
     <li><b>Give the model a way out.</b> Most of the failures were the absence of "I can't tell": front views, a statue, a plank, all forced into a yes or no. A usable-photo flag and a confidence field with a reason remove a whole class of errors by construction, and they make the product feel honest instead of confident.</li>
-    <li><b>Make failures say why, and treat cost as a stock, not just a rate.</b> The site was silently dead because a prepaid balance hit zero and the code discarded the error body. Caps limit spend rate; a balance runs out. Log the status and body of every failed call, distinguish "out of quota" from "rate-limited", and check the model path end to end, because a home page returning 200 proves nothing.</li>
+    <li><b>Make failures say why, and treat cost as a stock, not just a rate.</b> The site was silently dead because of a billing lapse, and the code discarded the error body. Caps limit spend rate; a balance is a stock. Log the status and body of every failed call, distinguish "out of quota" from "rate-limited", and check the model path end to end, because a home page returning 200 proves nothing.</li>
   </ol>
   <p>Everything below is the evidence for those five sentences.</p>
 </section>
@@ -307,15 +307,15 @@
 <section id="cost">
   <div class="vtag">Production <span>8 Sep 2026 · cost, limits, and running out</span></div>
   <h2>What broke, and what "it costs money" actually means</h2>
-  <p>On 8 Sep 2026, while I was taking baseline screenshots, every upload returned "All Vision Models Failed". The site had been silently broken for an unknown time. The cause was boring: the OpenAI account had run out of prepaid credits. The real problem was that the code caught the error and threw the body away, so the only visible symptom was a generic message and a fallback loop through several model names that all failed the same way.</p>
-  <p>Fix: add credits (two minutes), log status and response body for each failed call, and show users a message that distinguishes "we're out of quota" from "you're rate-limited" (<a href="https://github.com/shhirl/fixmybanana/pull/8">PR #8</a>). The lesson I'd bring to a client: the cheapest reliability work is making failures say why they failed.</p>
-  <div class="pair"><figure><img src="{{ url_for('static', filename='how-its-built/v0-failed.jpg') }}" alt="Failed result"><figcaption>16:45, every upload failing.</figcaption></figure><figure><img src="{{ url_for('static', filename='how-its-built/v0-result.jpg') }}" alt="Working result"><figcaption>17:20, after credits and logging.</figcaption></figure></div>
+  <p>On 8 Sep 2026, while I was taking baseline screenshots, every upload returned "All Vision Models Failed". The site had been silently broken for an unknown time. The cause was boring: a billing lapse on the OpenAI account. The real problem was that the code caught the error and threw the body away, so the only visible symptom was a generic message and a fallback loop through several model names that all failed the same way.</p>
+  <p>Fix: sort out billing (two minutes), log status and response body for each failed call, and show users a message that distinguishes "we're out of quota" from "you're rate-limited" (<a href="https://github.com/shhirl/fixmybanana/pull/8">PR #8</a>). The lesson I'd bring to a client: the cheapest reliability work is making failures say why they failed.</p>
+  <div class="pair"><figure><img src="{{ url_for('static', filename='how-its-built/v0-failed.jpg') }}" alt="Failed result"><figcaption>16:45, every upload failing.</figcaption></figure><figure><img src="{{ url_for('static', filename='how-its-built/v0-result.jpg') }}" alt="Working result"><figcaption>17:20, after billing and logging.</figcaption></figure></div>
   <details class="deeper" open><summary>Going deeper: three layers of spend control, and the one that failed</summary>
     <p>Each analysis is one or two calls to gpt-4o with an image attached. The image dominates the bill: at high detail OpenAI charges 85 tokens plus 170 per 512-pixel tile, so a phone photo is about 1,000 input tokens, or roughly a quarter of a cent per call at list price. A banana back costs two calls. Call it half a cent per upload{% if v %}; the measured mean is ${{ '%.4f' % v.cost_per_analysis }}{% endif %}.</p>
     <ul>
       <li><b>Layer 1, the app.</b> Five uploads per IP per day and fifty per day in total, enforced in the Flask app. Worst-case spend is fifty uploads times two calls times a quarter cent: about 25 cents a day. This is the layer that stops a bored visitor or a script from running up the bill.</li>
       <li><b>Layer 2, the provider's budget cap.</b> A hard limit of $20 per day set on the OpenAI account. Eighty times the app's worst case, so it never triggers in normal life. It exists for the day the app limiter has a bug, or a key leaks. Caps limit the <i>rate</i> of spend.</li>
-      <li><b>Layer 3, the prepaid balance.</b> This is the one that failed. A balance is a <i>stock</i>, not a rate. Neither cap says anything when it drains to zero over months of small, legitimate use, and the API's answer to an empty balance is an HTTP 429 that looks, at a glance, exactly like being rate-limited. The code treated both the same way, retried through four model names, and reported a generic failure.</li>
+      <li><b>Layer 3, the account balance.</b> This is the layer a billing lapse hits, and it is the one that bit here. A balance is a <i>stock</i>, not a rate. Neither cap says anything when the stock runs low over months of small, legitimate use, and the API's answer to a billing problem is an HTTP 429 that looks, at a glance, exactly like being rate-limited. The code treated both the same way, retried through four model names, and reported a generic failure.</li>
     </ul>
     <p>What I'd set up for a client, in order: a balance alert at a threshold that gives a week's warning; auto-recharge with a monthly ceiling rather than no recharge at all; code that distinguishes the two 429s (<code>insufficient_quota</code> is persistent and wakes a human, <code>rate_limit_exceeded</code> is transient and retries with backoff); a daily synthetic check that exercises the model path end to end, because a health check on the home page returns 200 while the product is dead; and an alert on error rate, not only on uptime.</p>
   </details>
@@ -417,7 +417,7 @@
         <text x="374" y="154">rate limits: 5 uploads/IP/day, 50/day total (ProxyFix so Cloudflare IPs count right)</text>
         <text x="374" y="172">uploads purged after 24 h; photos never leave the container except to OpenAI</text>
         <text x="374" y="190">logs: every failed model call with status + body, since PR #8</text>
-        <text x="374" y="208">$20/day budget cap at OpenAI; prepaid balance alert: still to do</text>
+        <text x="374" y="208">$20/day budget cap at OpenAI; balance alert: still to do</text>
       </g>
     </g></svg></div>
   <details class="deeper"><summary>Going deeper: the operating decisions, and what monitoring would add</summary>
