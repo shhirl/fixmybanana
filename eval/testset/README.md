@@ -52,7 +52,7 @@ Photos of other people go public with the repo. Options: (a) only photos you hav
 
 49 files: 43 handstands + 6 controls. All from Wikimedia Commons under CC0 / CC BY / CC BY-SA / public domain, with licence, author and page URL in `labels.csv` → `source`. Three files (047–049) are degraded copies of real photos in the set (darkened, blurred, downscaled) to test robustness; they are marked `derived`.
 
-Coverage: view side 31 / front 9 / back 2 / angled 1 · support freestanding 39 / wall 4 · quality good 34, dark 5, low_res 3, blurry 1 · Claude's first-pass labels: 20 good form, 23 banana back.
+Coverage: view side 31 / front 9 / back 2 / angled 1 · support freestanding 39 / wall 4 · quality good 34, dark 5, low_res 3, blurry 1 · Claude's first-pass labels: 15 good form, 28 banana back.
 
 Known gaps: only 4 wall-assisted photos and **no mirror shots** — Commons has almost none. Options: Shirley's own phone photos, or a handful of AI-generated fillers marked `source=synthetic`. Decide and note it here.
 
