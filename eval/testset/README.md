@@ -55,6 +55,6 @@ Photos of other people go public with the repo. Options: (a) only photos you hav
 - 3 derived copies of real photos in the set (047–049: darkened, blurred, downscaled) to test robustness.
 - 5 AI-generated (050–054, Higgsfield `soul_2`, ~1 credit total) to fill the two axes Commons lacks: wall-assisted and mirror shots. Marked `synthetic` in `source`; no real person. 050 has questionable anatomy — Shirley decides whether to keep it.
 
-Coverage (handstands): view side 34 / front 9 / back 3 / angled 1 · support freestanding 41 / wall 6 · mirror 2 (+1 mirror control) · quality good 37, dark 6, low_res 3, blurry 1 · Claude first pass: 17 good form, 30 banana back.
+Coverage (handstands): view side 34 / front 9 / back 3 / angled 1 · support freestanding 41 / wall 6 · mirror 1 handstand (054) + 1 mirror control (053) · quality good 37, dark 6, low_res 3, blurry 1 · Claude first pass (labels derived from Claude's scores by the same 0–5 / 6–10 rule): see `labels.csv`; binary agreement with Shirley 31/47 = 66%.
 
 `claude_score_0_10` / `claude_label` are a first pass from Claude to speed up review — **Shirley's columns are the ground truth**; fill them without looking at the Claude columns first if you want a clean second-labeller comparison.
