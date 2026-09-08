@@ -31,6 +31,10 @@
     {% endif %}
 </div>
 
+{% if eval_summary and eval_summary.n_photos %}
+<p class="eval-line">Evaluated on {{ eval_summary.n_photos }} photos · agrees with my label {{ eval_summary.majority_pct }}% of the time · <a href="{{ url_for('how_its_built') }}#v0">see how</a></p>
+{% endif %}
+
 <!-- Display the user's uploaded image -->
 <div style="text-align: center; margin: 30px 0;">
     <h3 style="color: #333; margin-bottom: 15px;">📸 Your Handstand Photo</h3>
