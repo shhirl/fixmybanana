@@ -44,8 +44,8 @@ Eval-plan "immediate to-dos" status: screenshots ✅ (`docs/screenshots/2026-09-
 ### 2d. The page (branch `how-its-built`; visual → before/after screenshots + tag)
 - [x] (PR #9) `app.py`: `GET /how-its-built` → `templates/how_its_built.html` (extends `base.html`; same card + banana background + footer).
 - [x] (PR #9) Page content: short intro; `#v0` block (what/why, prompt screenshot or snippet, eval table, cost/analysis); `#v2` block (test set design, labelling, taxonomy, the "same photo, five scores" chart); "Not done / next" list from the eval plan §4; link to the GitHub repo.
-- [ ] Separate tiny PR `nav-link-how-its-built`: header link "How it's built" on every page + one line under the result card: "Evaluated on N photos · agrees with me X% · see how" (numbers read from `eval/results/` or hard-coded constants in one place).
-- [ ] Verify: all templates render, `GET /how-its-built` 200, mobile check, screenshots before/after, PR → merge → tag `look-YYYY-MM-DD-how-its-built`.
+- [x] (PR #10) Separate tiny PR `nav-link-how-its-built`: header link "How it's built" on every page + one line under the result card: "Evaluated on N photos · agrees with me X% · see how" (numbers read from `eval/results/` or hard-coded constants in one place).
+- [x] Verified live 2026-09-08 19:00; tag `look-2026-09-08-how-its-built`; after-screenshots in `docs/screenshots/2026-09-08-after-how-its-built/`.
 - [ ] Shirley: whirleyworld.com project card → `/how-its-built`; LinkedIn post with one honest number.
 
 ### 2e. Later versions (one branch + PR + page block + post each)
