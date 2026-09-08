@@ -38,7 +38,15 @@ The site is about to get a new page and other visual changes. Rules so any chang
 
 Every session must leave the repo in a state another session can pick up cold:
 
-- **Start:** `git pull`, `git status`, `gh pr list`, read `TODO.md` → "Now / next", read `docs/plans/*.md` for the active initiative.
+- **Fresh clone (Shirley wipes the folder after each session and may continue from another machine).** After `git clone https://github.com/shhirl/fixmybanana`, run these before anything else:
+  ```bash
+  git config --local user.name shhirl
+  git config --local user.email 44226442+shhirl@users.noreply.github.com
+  gh auth status            # must show shhirl active; else: gh auth switch -u shhirl
+  python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+  ```
+  Everything the project needs is in git — there is no local-only state to carry over.
+- **Start:** `git pull`, `git status`, `gh pr list`, read `TODO.md` → "Now / next", then `docs/plans/2026-09-08-execution-plan.md` (the ordered plan) and any other `docs/plans/*.md`.
 - **End:** commit everything (WIP is fine on a branch), push the branch, update `TODO.md` "Now / next" with what's in flight and the exact next step, then push. Nothing may exist only on this machine.
 - **Local venv:** `.venv/` (gitignored). Recreate with `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`. Smoke check: `.venv/bin/python -c "import app; print(app.app.test_client().get('/').status_code)"` → `200`.
 - **macOS note:** this app cannot read `~/Downloads` or `~/Desktop` (Files & Folders permission). Files Shirley wants Claude to use must be copied into the repo (`docs/plans/`, `docs/screenshots/`) first, or the permission granted in System Settings → Privacy & Security → Files and Folders.
