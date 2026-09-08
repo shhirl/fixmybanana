@@ -45,7 +45,7 @@ Every session must leave the repo in a state another session can pick up cold:
   gh auth status            # must show shhirl active; else: gh auth switch -u shhirl
   python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
   ```
-  Everything the project needs is in git — there is no local-only state to carry over.
+  Everything the project needs is in git, with one exception: the eval scripts (`eval/run_eval.py`, `eval/capture_v0.py`) read `OPENAI_API_KEY` from a gitignored `.env` in the repo root. Recreate it on each machine with the same key Railway uses (Railway → fixmybanana → web → Variables): one line, `OPENAI_API_KEY=sk-...`. Claude must never print or commit it. The live site does not need `.env`.
 - **Start:** `git pull`, `git status`, `gh pr list`, read `TODO.md` → "Now / next", then `docs/plans/2026-09-08-execution-plan.md` (the ordered plan) and any other `docs/plans/*.md`.
 - **End:** commit everything (WIP is fine on a branch), push the branch, update `TODO.md` "Now / next" with what's in flight and the exact next step, then push. Nothing may exist only on this machine.
 - **Local venv:** `.venv/` (gitignored). Recreate with `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`. Smoke check: `.venv/bin/python -c "import app; print(app.app.test_client().get('/').status_code)"` → `200`.
