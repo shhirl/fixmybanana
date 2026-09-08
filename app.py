@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.middleware.proxy_fix import ProxyFix
 import requests
 import json
+import logging
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
@@ -29,6 +30,20 @@ def ratelimit_handler(e):
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def friendly_ai_error(last_error):
+    """
+    Turn the last OpenAI failure into a message safe to show users.
+    The real status code and response body go to the logs (Railway → Deploy logs).
+    """
+    status = last_error[1] if last_error else None
+    if status == 429:
+        return "Our AI has hit its daily budget. Please try again tomorrow."
+    if status in (401, 403):
+        return "Our AI connection is misconfigured. Please try again later."
+    if status == 404:
+        return "Our AI model is temporarily unavailable. Please try again later."
+    return "Our AI analysis is temporarily unavailable. Please try again in a few minutes."
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -103,9 +118,12 @@ def get_banana_back_feedback(base64_image, api_key, model_name):
             result = response.json()
             return result['choices'][0]['message']['content'].strip()
         else:
+            app.logger.error("OpenAI feedback call failed: model=%s status=%s body=%s",
+                             model_name, response.status_code, response.text[:300])
             return "Unable to generate detailed feedback at this time."
             
     except Exception as e:
+        app.logger.exception("OpenAI feedback call raised")
         return f"Error generating feedback: {str(e)}"
 
 def analyze_handstand_posture(image_path):
@@ -126,6 +144,8 @@ def analyze_handstand_posture(image_path):
         test_headers = {"Authorization": f"Bearer {api_key}"}
         test_response = requests.get("https://api.openai.com/v1/models", headers=test_headers)
         if test_response.status_code != 200:
+            app.logger.error("OpenAI key check failed: status=%s body=%s",
+                             test_response.status_code, test_response.text[:300])
             return {
                 'analysis': f'API key validation failed: {test_response.status_code}',
                 'form_quality': 'error',
@@ -148,8 +168,14 @@ def analyze_handstand_posture(image_path):
         }
         
         # Try models that support vision
-        models_to_try = ["gpt-4o", "gpt-4-turbo", "gpt-4-turbo-2024-04-09"]
+        # Original v0 list first (so v0 behaviour is unchanged while those models exist),
+        # then current models as fallbacks. gpt-4-turbo* shut down 2026-10-23 per
+        # developers.openai.com/api/docs/deprecations; gpt-5.6-terra (lighter) and
+        # gpt-5.6-sol (flagship) are the documented replacements.
+        models_to_try = ["gpt-4o", "gpt-4-turbo", "gpt-4-turbo-2024-04-09",
+                         "gpt-5.6-terra", "gpt-5.6-sol"]
         
+        last_error = None
         for model_name in models_to_try:
             payload = {
                     "model": model_name,
@@ -253,21 +279,27 @@ def analyze_handstand_posture(image_path):
                         'form_quality': form_quality,
                         'detailed_feedback': None
                     }
+            else:
+                last_error = (model_name, response.status_code, response.text[:300])
+                app.logger.error("OpenAI classify failed: model=%s status=%s body=%s", *last_error)
             # If this model fails, try the next one
         # If we get here, all models failed
+        app.logger.error("All vision models failed; last error: %s", last_error)
         return {
-            'analysis': 'All vision models failed. Please try again.',
+            'analysis': friendly_ai_error(last_error),
             'form_quality': 'error',
             'detailed_feedback': None
         }
         
     except requests.exceptions.RequestException as e:
+        app.logger.exception("OpenAI request error")
         return {
             'analysis': f'API request error: {str(e)}',
             'form_quality': 'error',
             'detailed_feedback': None
         }
     except Exception as e:
+        app.logger.exception("Error analyzing image")
         return {
             'analysis': f'Error analyzing image: {str(e)}',
             'form_quality': 'error',
