@@ -265,6 +265,31 @@
         .site-footer a:hover {
             text-decoration: underline;
         }
+        .top-nav {
+            display: flex;
+            justify-content: flex-end;
+            margin: -12px 0 8px;
+            font-size: 14px;
+        }
+        .top-nav a {
+            color: #5a34e6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .top-nav a:hover {
+            text-decoration: underline;
+        }
+        .eval-line {
+            text-align: center;
+            font-size: 14px;
+            color: #6b7280;
+            margin: 12px 0 0;
+        }
+        .eval-line a {
+            color: #5a34e6;
+            font-weight: 600;
+            text-decoration: none;
+        }
         .visually-hidden {
             position: absolute;
             width: 1px;
@@ -280,6 +305,7 @@
 </head>
 <body>
     <div class="container">
+        <nav class="top-nav"><a href="{{ url_for('how_its_built') }}">How it's built →</a></nav>
         {% block content %}{% endblock %}
     </div>
 
@@ -289,7 +315,7 @@
             <a href="https://www.linkedin.com/in/shhirl" target="_blank" rel="noopener">LinkedIn</a> ·
             <a href="https://www.instagram.com/shirleywhirlhe" target="_blank" rel="noopener">Instagram</a> ·
             <a href="https://github.com/shhirl" target="_blank" rel="noopener">GitHub</a> ·
-            <a href="https://www.whirleyworld.com" target="_blank" rel="noopener">whirleyworld.com</a>
+            <a href="{{ url_for('how_its_built') }}">How it's built</a>
         </nav>
     </footer>
 
