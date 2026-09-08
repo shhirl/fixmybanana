@@ -47,3 +47,13 @@ Photos of other people go public with the repo. Options: (a) only photos you hav
 - [ ] every file has a row in `eval/labels.csv` with score, label, axes, source
 - [ ] privacy decision recorded
 - [ ] then run `eval/run_eval.py --version v0 --runs 5` (Phase 2b builds this script)
+
+## 6. What is in the set as of 2026-09-08 (collected by Claude, awaiting Shirley's review)
+
+49 files: 43 handstands + 6 controls. All from Wikimedia Commons under CC0 / CC BY / CC BY-SA / public domain, with licence, author and page URL in `labels.csv` → `source`. Three files (047–049) are degraded copies of real photos in the set (darkened, blurred, downscaled) to test robustness; they are marked `derived`.
+
+Coverage: view side 31 / front 9 / back 2 / angled 1 · support freestanding 39 / wall 4 · quality good 34, dark 5, low_res 3, blurry 1 · Claude's first-pass labels: 20 good form, 23 banana back.
+
+Known gaps: only 4 wall-assisted photos and **no mirror shots** — Commons has almost none. Options: Shirley's own phone photos, or a handful of AI-generated fillers marked `source=synthetic`. Decide and note it here.
+
+`claude_score_0_10` / `claude_label` are a first pass from Claude to speed up review — **Shirley's columns are the ground truth**; fill them without looking at the Claude columns first if you want a clean second-labeller comparison.
