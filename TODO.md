@@ -6,6 +6,9 @@ Living doc. Add new items at the top of each section. Move done items to "Done" 
 
 ## Now / next
 
+- [ ] **Eval-page initiative — started 2026-09-08, nothing built yet.** Plan doc: `docs/plans/fixmybanana-eval-plan.md` (Shirley: copy it from `~/Downloads` — Claude can't read Downloads on this Mac). Baseline screenshots of the current site go in `docs/screenshots/2026-09-08-baseline/` (naming in `docs/README.md`). Code baseline is the git tag `baseline-2026-09-08`.
+  Next step: once the plan + screenshots are in the repo, `git checkout -b eval-page`, build the new page per the plan, open a PR, take `before-`/`after-` screenshot sets, merge = deploy, then tag `look-<date>-eval-page`.
+- [ ] **Housekeeping:** remote branch `improve-feedback-response` (v1) is unmerged and superseded by v2 (merged) — safe to delete on GitHub. `brand-and-share` and `improve-feedback-response-v2` are merged and can be deleted too.
 - [ ] **Merge PR #7** (`dedupe-footer-link`) — removes the redundant whirleyworld.com footer link ("Built by Shirley He" already links there). One-line change; merging deploys it.
 - [ ] **Phone-test the share card on the live site.** Upload a photo → tap "Share it" → native share sheet should open with the score-card PNG attached. Desktop should download the PNG + copy share text. (Client-side JS — never manually tested; costs one OpenAI call + one of the 5/day rate-limit slots.)
 - [ ] **Optional safety upgrades discussed 2026-07-23:** smoke test as `test_app.py` + GitHub Action (checks: app imports, `GET /` is 200, all templates render, purge deletes >24h files), branch protection requiring it, and Railway PR preview environments (Railway settings → Environments).
