@@ -7,13 +7,18 @@
 </div>
 {% endif %}
 <h1>🍌 Are You Going Bananas? 🍌</h1>
-<p style="text-align: center; color: #666; margin-bottom: 14px;">
-    The Banana Handstand Detector
-</p>
-<figure class="example">
-    <img src="{{ url_for('static', filename='handstand_demo.jpg') }}" alt="Two cartoon handstands: an arched banana back marked with a cross, a straight one marked with a tick">
-    <figcaption>Banana back (left) vs good form (right)</figcaption>
-</figure>
+<p class="tagline">Upload a handstand photo. An AI tells you if you've got a banana back, and how to fix it.</p>
+<section class="explainer" aria-label="How it works">
+    <figure class="example">
+        <img src="{{ url_for('static', filename='handstand_demo.jpg') }}" alt="Two cartoon handstands: an arched banana back marked with a cross, a straight one marked with a tick">
+        <figcaption>Banana back (left) vs good form (right)</figcaption>
+    </figure>
+    <ol class="steps-v">
+        <li><span aria-hidden="true">🤸</span><div><b>Do a handstand</b><small>freestanding or wall, photographed from the side</small></div></li>
+        <li><span aria-hidden="true">📸</span><div><b>Upload the photo</b><small>whole body in frame</small></div></li>
+        <li><span aria-hidden="true">🍌</span><div><b>Get your banana score</b><small>good form or banana back, plus a coaching note</small></div></li>
+    </ol>
+</section>
 
 <form action="/upload" method="post" enctype="multipart/form-data" id="uploadForm">
     <div class="upload-container">
@@ -53,6 +58,8 @@
 </div>
 {% endif %}
 
+<p class="privacy-note">🔒 Your photo is sent to OpenAI for analysis and auto-deleted from our server within 24 hours — never shared, never sold.</p>
+
 <aside class="case-card">
     <a class="case-thumb" href="{{ url_for('how_its_built') }}"><img src="{{ url_for('static', filename='how-its-built/testset-sheet.jpg') }}" alt="Contact sheet of the hand-labelled test set"></a>
     <div>
@@ -62,19 +69,7 @@
     </div>
 </aside>
 
-<p class="privacy-note">🔒 Your photo is sent to OpenAI for analysis and auto-deleted from our server within 24 hours — never shared, never sold.</p>
 
-<div style="margin-top: 40px; padding: 20px; background-color: #e9f7ef; border-radius: 8px;">
-    <h3>How It Works</h3>
-    <ol>
-        <li><strong>Do a handstand</strong> - Freestanding or wall-assisted, and take a picture</li>
-        <li><strong>Upload your photo</strong> - Our AI analyzes your form</li>
-        <li><strong>Get your rating</strong> - See where you land on the banana scale</li>
-    </ol>
-    <p style="margin-top: 20px;">
-        💡 <strong>For the most accurate rating:</strong> Good lighting and a clear background help our AI give you the best analysis. Side view works best; make sure your whole body is visible
-    </p>
-</div>
 
 <section class="feedback-section" id="feedback">
     <h2>Loved it? Got ideas? 🍌</h2>
@@ -89,11 +84,12 @@
         <textarea
             id="feedback-message"
             name="message"
-            rows="5"
+            rows="3"
             maxlength="5000"
             placeholder="What's on your mind?"
             required
         ></textarea>
+        <div class="fb-row">
         <label for="feedback-email" class="visually-hidden">Your email</label>
         <input
             id="feedback-email"
@@ -103,6 +99,7 @@
             required
         />
         <button type="submit">Send it</button>
+        </div>
     </form>
 </section>
 {% endblock %}

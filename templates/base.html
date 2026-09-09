@@ -29,7 +29,7 @@
             margin-bottom: 24px;
             font-weight: 800;
         }
-        .example { margin: 0 auto 26px; max-width: 360px; text-align: center; }
+        .example { margin: 0 auto 22px; max-width: 320px; text-align: center; }
         .example img { width: 100%; display: block; border-radius: 10px; box-shadow: 0 4px 14px rgba(18,23,35,0.10); }
         .example figcaption { font-size: 12.5px; color: #6b7280; margin-top: 6px; }
         .upload-container {
@@ -162,8 +162,8 @@
             background-color: #545b62;
         }
         .feedback-section {
-            margin-top: 40px;
-            padding: 24px;
+            margin-top: 28px;
+            padding: 18px 20px;
             background: linear-gradient(180deg, #fffef7, #fff8e1);
             border: 2px solid #ffd700;
             border-radius: 12px;
@@ -172,17 +172,34 @@
             margin: 0 0 8px 0;
             color: #1f2330;
             font-weight: 800;
-            font-size: 22px;
+            font-size: 17px;
         }
         .feedback-blurb {
-            margin: 0 0 18px 0;
+            margin: 0 0 12px 0;
             color: #4b5563;
             line-height: 1.5;
+            font-size: 14px;
         }
         .feedback-form {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
+        }
+        .fb-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            align-items: center;
+        }
+        .fb-row button {
+            width: auto;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-size: 14px;
+            box-shadow: none;
+        }
+        .fb-row button::before {
+            content: none;
         }
         .feedback-form textarea,
         .feedback-form input[type="email"] {
@@ -200,7 +217,8 @@
         }
         .feedback-form textarea {
             resize: vertical;
-            min-height: 110px;
+            min-height: 64px;
+            font-size: 14px;
         }
         .feedback-form textarea:focus,
         .feedback-form input[type="email"]:focus {
@@ -222,7 +240,7 @@
             text-align: center;
             font-size: 13px;
             color: #6b7280;
-            margin: 14px 0 0;
+            margin: 10px 0 0;
         }
         .share-section {
             margin: 30px 0;
@@ -271,16 +289,19 @@
         .top-nav {
             display: flex;
             justify-content: flex-end;
-            margin: -12px 0 8px;
+            margin: -8px 0 4px;
             font-size: 14px;
         }
         .top-nav a {
-            color: #5a34e6;
+            background: #5a34e6;
+            color: #fff;
             text-decoration: none;
             font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 8px;
         }
         .top-nav a:hover {
-            text-decoration: underline;
+            background: #4a2ac2;
         }
         .samples { text-align: center; margin: 22px 0 8px; }
         .samples-title { font-weight: 600; color: #1f2330; margin: 0 0 12px; }
@@ -292,8 +313,17 @@
         .sample-note a { color: #5a34e6; font-weight: 600; }
         .photo-credit { font-size: 12px; color: #6b7280; margin: 6px 0 0; }
         .photo-credit a { color: #6b7280; }
-        .case-card { display: grid; grid-template-columns: 150px 1fr; gap: 18px; align-items: center; margin: 26px 0 4px; padding: 16px 18px; background: #fbfaf7; border: 1px solid #e5e2da; border-radius: 12px; text-align: left; }
-        .case-thumb img { width: 150px; border-radius: 8px; display: block; border: 1px solid #e5e2da; }
+        .case-card { display: grid; grid-template-columns: 150px 1fr; gap: 18px; align-items: center; margin: 26px 0 0; padding: 16px 18px; background: #f4f1ff; border: 1px solid #e0d9ff; border-radius: 12px; text-align: left; }
+        .case-thumb img { width: 150px; border-radius: 8px; display: block; border: 1px solid #e0d9ff; }
+        .tagline { text-align: center; color: #4b5563; font-size: 17px; max-width: 520px; margin: -6px auto 22px; line-height: 1.45; }
+        .explainer { display: grid; grid-template-columns: 300px 1fr; gap: 22px; align-items: center; margin: 0 0 26px; padding: 16px 18px; background: #f6f7fb; border-radius: 12px; }
+        .explainer .example { margin: 0; max-width: none; }
+        .steps-v { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+        .steps-v li { display: flex; gap: 12px; align-items: flex-start; }
+        .steps-v span { font-size: 24px; line-height: 1; width: 32px; text-align: center; flex: none; }
+        .steps-v b { display: block; color: #1f2330; font-size: 14.5px; }
+        .steps-v small { display: block; color: #6b7280; font-size: 13px; line-height: 1.35; }
+        @media (max-width: 600px) { .explainer { grid-template-columns: 1fr; } }
         .case-card h3 { margin: 0 0 6px; font-size: 17px; color: #1f2330; }
         .case-card p { margin: 0 0 12px; font-size: 14px; color: #4b5563; line-height: 1.5; }
         .case-btn { display: inline-block; background: #5a34e6; color: #fff; text-decoration: none; font-weight: 600; font-size: 14px; padding: 9px 16px; border-radius: 8px; }
