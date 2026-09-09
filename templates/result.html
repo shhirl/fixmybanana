@@ -72,16 +72,20 @@
     <button type="submit" class="back-btn">{% if sample %}📷 Analyze Your Own Photo{% else %}📷 Analyze Another Photo{% endif %}</button>
 </form>
 <script>
-    // Ensure the background persists on the result page
+    // Tile the photo this page is about as the background. Samples never go through the
+    // home-page file picker, so the photo shown on this page is the source of truth, not
+    // whatever was last saved in localStorage.
     (function() {
-        try {
-            var savedBg = localStorage.getItem('bgDataUrl');
-            if (savedBg) {
-                document.body.style.backgroundImage = 'url(' + savedBg + ')';
-                document.body.style.backgroundRepeat = 'repeat';
-                document.body.style.backgroundSize = '256px 256px';
-            }
-        } catch (e) {}
+        var photo = document.getElementById('resultPhoto');
+        var src = photo && photo.getAttribute('src');
+        if (!src) {
+            try { src = localStorage.getItem('bgDataUrl'); } catch (e) {}
+        }
+        if (src) {
+            document.body.style.backgroundImage = 'url(' + src + ')';
+            document.body.style.backgroundRepeat = 'repeat';
+            document.body.style.backgroundSize = '256px 256px';
+        }
     })();
 
     // Shareable banana score card
