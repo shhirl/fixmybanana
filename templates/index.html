@@ -49,6 +49,15 @@
 </div>
 {% endif %}
 
+<aside class="case-card">
+    <a class="case-thumb" href="{{ url_for('how_its_built') }}"><img src="{{ url_for('static', filename='how-its-built/testset-sheet.jpg') }}" alt="Contact sheet of the hand-labelled test set"></a>
+    <div>
+        <h3>The case study behind the banana</h3>
+        <p>The write-up covers the problem, the trade-offs, why a vision model at all.</p>
+        <a class="case-btn" href="{{ url_for('how_its_built') }}">How I built this →</a>
+    </div>
+</aside>
+
 <p class="privacy-note">🔒 Your photo is sent to OpenAI for analysis and auto-deleted from our server within 24 hours — never shared, never sold.</p>
 
 <div style="margin-top: 40px; padding: 20px; background-color: #e9f7ef; border-radius: 8px;">
