@@ -46,7 +46,6 @@
         <a class="sample" href="{{ url_for('sample_result', sample_id=s.id) }}"><img src="{{ url_for('sample_photo', sample_id=s.id) }}" alt="{{ s.title }}"><span>{{ s.title }}</span></a>
         {% endfor %}
     </div>
-    <p class="samples-note">Recorded results from the eval behind <a href="{{ url_for('how_its_built') }}">How it's built</a>. No upload, no wait.</p>
 </div>
 {% endif %}
 
