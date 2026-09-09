@@ -153,7 +153,7 @@
 </section>
 
 <section id="solution" class="tri core">
-  <h2><span class="n">4 · The solution</span>Two model calls, one fixed test set, one loop</h2>
+  <h2><span class="n">4 · The solution</span>A vision model for the verdict, measured on a fixed set before anything changes</h2>
   <p>One upload triggers up to two calls to OpenAI's chat-completions API, both with the photo attached.</p>
   <ol>
     <li><b>Classifier.</b> Temperature 0, five output tokens, two text-only examples, told to answer exactly "good form" or "banana back". The app checks for the word "banana" or "good"; anything else is shown raw as "unclear".</li>
