@@ -1,0 +1,38 @@
+[
+  {
+    "id": "banana",
+    "title": "A proper banana",
+    "photo": "017_side_freestanding_beach-bikini.jpg",
+    "analysis": "banana back",
+    "form_quality": "bad",
+    "detailed_feedback": "In this handstand, the 'banana back' form is evident due to the pronounced arch in the lower back, causing the spine to curve rather than align straight. The hips are not stacked over the shoulders, which contributes to the arching. The overall body line is not vertical, with the legs and feet extending forward instead of being aligned over the body. To improve, focus on engaging the core to straighten the spine and bring the hips and legs into alignment over the shoulders.",
+    "eval_version": "v0",
+    "run": 1,
+    "model": "gpt-4o",
+    "recorded_at": "2026-09-08T16:48:46+00:00",
+    "latency_s": 4.58,
+    "cost_usd": 0.007352,
+    "shirley_score": 7,
+    "shirley_label": "banana back",
+    "credit": "Wikimedia Commons, CC BY 3.0 — Ольга Попова",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Handstand_at_the_beach.jpg"
+  },
+  {
+    "id": "straight",
+    "title": "Nice and straight",
+    "photo": "001_side_freestanding_studio.jpg",
+    "analysis": "good form",
+    "form_quality": "good",
+    "detailed_feedback": null,
+    "eval_version": "v0",
+    "run": 1,
+    "model": "gpt-4o",
+    "recorded_at": "2026-09-08T16:44:31+00:00",
+    "latency_s": 1.39,
+    "cost_usd": 0.002505,
+    "shirley_score": 1,
+    "shirley_label": "good form",
+    "credit": "Wikimedia Commons, CC BY-SA 3.0 — Earl Mcgehee",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Handstand_(119653409).jpeg"
+  }
+]

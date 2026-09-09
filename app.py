@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, jsonify, redirect, url_for, send_from_directory
+from flask import Flask, request, render_template, jsonify, redirect, url_for, send_from_directory, abort
 import os
 import base64
 import time
@@ -316,10 +316,35 @@ def inject_eval_summary():
     except (OSError, ValueError):
         return dict(eval_summary=None)
 
+def load_samples():
+    """The 'try a sample' photos and their recorded results (eval/samples.json, written by eval/make_samples.py)."""
+    try:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'eval/samples.json')) as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return []
+
 @app.route('/')
 def index():
     feedback_submitted = request.args.get('submitted') == '1'
-    return render_template('index.html', feedback_submitted=feedback_submitted)
+    return render_template('index.html', feedback_submitted=feedback_submitted, samples=load_samples())
+
+@app.route('/sample/<sample_id>')
+def sample_result(sample_id):
+    """Result page for a sample photo: a recorded run from the eval, no live model call and no rate-limit slot."""
+    sample = next((s for s in load_samples() if s['id'] == sample_id), None)
+    if not sample:
+        abort(404)
+    return render_template('result.html', analysis=sample['analysis'], form_quality=sample['form_quality'],
+                           detailed_feedback=sample.get('detailed_feedback'), uploaded_image=None, sample=sample)
+
+@app.route('/sample-photo/<sample_id>')
+def sample_photo(sample_id):
+    sample = next((s for s in load_samples() if s['id'] == sample_id), None)
+    if not sample:
+        abort(404)
+    testset = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'eval', 'testset')
+    return send_from_directory(testset, sample['photo'])
 
 @app.route('/how-its-built')
 def how_its_built():
