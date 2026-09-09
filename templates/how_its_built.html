@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How it's built — fixmybanana.com</title>
+<title>How I built and tested an AI coach for handstands — fixmybanana.com</title>
 <meta name="description" content="How the banana handstand detector is evaluated: a fixed test set, hand labels, five runs per photo, the numbers published even when they're bad.">
 <style>
   body{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;max-width:720px;margin:0 auto;padding:40px 22px 60px;background:#fbfaf7;color:#1a1a1a;-webkit-font-smoothing:antialiased;line-height:1.6}
@@ -72,8 +72,8 @@
   <a class="tool" href="/">🍌 Try the tool</a>
 </div>
 
-<p class="kicker">How it's built</p>
-<h1>A fun handstand detector, built like a real one</h1>
+<p class="kicker">Case study</p>
+<h1>How I built and tested an AI coach for handstands, mobility, and bananas</h1>
 <p class="lede">fixmybanana.com is a fun little tool with a real model behind it: upload a handstand photo and an OpenAI vision model tells you whether you have "good form" or a "banana back", the arched spine every beginner has.</p>
 <p>I was a personal trainer before data science, and I built this the way I learn best: make something, then find out where it breaks. This page is the finding-out, kept as a lab notebook. It answers four questions: what problem the tool has, what I traded off, how it's built and why a vision model is the right tool, and how each version scores on the same {{ c.n if c else 54 }} photos I labelled by hand. Some of the numbers are bad. That's the point.</p>
 <p class="small">Code, prompts, test set and every result CSV: <a href="https://github.com/shhirl/fixmybanana">github.com/shhirl/fixmybanana</a>.</p>
