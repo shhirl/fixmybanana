@@ -46,9 +46,13 @@
   .note{font-family:-apple-system,Inter,Arial,sans-serif;font-size:13px;color:#7a7568;border:1px dashed #d9d5cb;padding:8px 12px;margin:10px 0}
   details.deeper{background:#f3f1ea;border:0;padding:12px 16px;margin:16px 0}details.deeper summary{color:#1a1a1a}details.deeper p,details.deeper li{font-size:15px}details.deeper ul{padding-left:18px}
   .diag{margin:18px 0;font-family:-apple-system,Inter,Arial,sans-serif}.diag svg{width:100%;height:auto;display:block}
-  .tri h2{font-size:34px;line-height:1.15;margin-top:14px}.tri h2 .n{font-family:-apple-system,Inter,Arial,sans-serif;font-size:14px;font-weight:600;letter-spacing:.12em;color:#1a1a1a;display:block;margin-bottom:8px}
+  .tri{border-top:1px solid #1a1a1a;padding-top:22px;margin-top:60px}
+  .tri h2{font-size:19px;font-weight:400;color:#3d3a33;margin:0 0 16px;line-height:1.35;letter-spacing:0}
+  .tri h2 .n{font-size:40px;font-weight:500;letter-spacing:-.015em;color:#1a1a1a;display:block;margin-bottom:8px;line-height:1.1}
+  .tri.core h2 .n::before{content:"";display:block;width:40px;height:6px;background:#f5b800;margin-bottom:16px}
+  .tri .vtag{margin-bottom:14px}
   .pf{margin-top:56px;padding-top:18px;border-top:1px solid #1a1a1a;font-family:-apple-system,Inter,Arial,sans-serif;font-size:13.5px;color:#7a7568;line-height:1.7}
-  @media (max-width:560px){.tri h2{font-size:28px}.stats{grid-template-columns:repeat(2,1fr)}.stat:nth-child(2){border-right:0}.stat:nth-child(-n+2){border-bottom:1px solid #e5e2da}h1{font-size:30px}.pair{grid-template-columns:1fr}.row{grid-template-columns:30px 18px repeat(5,1fr) 56px}}
+  @media (max-width:560px){.tri h2 .n{font-size:30px}.stats{grid-template-columns:repeat(2,1fr)}.stat:nth-child(2){border-right:0}.stat:nth-child(-n+2){border-bottom:1px solid #e5e2da}h1{font-size:30px}.pair{grid-template-columns:1fr}.row{grid-template-columns:30px 18px repeat(5,1fr) 56px}}
 </style>
 </head>
 <body>
@@ -58,7 +62,7 @@
     <a href="#problem">problem</a>
     <a href="#vision">why AI</a>
     <a href="#tradeoffs">trade-offs</a>
-    <a href="#solution">build</a>
+    <a href="#solution">solution</a>
     <a href="#v2">test set</a>
     <a href="#v0">results</a>
     <a href="#takeaways">takeaways</a>
@@ -83,8 +87,8 @@
 </div>
 {% endif %}
 
-<section id="problem" class="tri">
-  <h2><span class="n">1 · THE PROBLEM</span>A confident answer with nothing behind it</h2>
+<section id="problem" class="tri core">
+  <h2><span class="n">1 · The problem</span>A confident answer with nothing behind it</h2>
   <p>The first version did what most AI demos do: send a photo and a prompt to a model, show whatever comes back in a nice card. Four things were wrong with that, and none of them showed on screen.</p>
   <ul>
     <li><b>Nobody knew if it was right.</b> There was no reference to compare against, so "it seems to work" was the only evidence.</li>
@@ -95,8 +99,8 @@
   <p>The question this page answers is the one I'd ask about any model in production: <i>how do you know, and what does it cost to find out?</i></p>
 </section>
 
-<section id="vision" class="tri">
-  <h2><span class="n">2 · WHY AI</span>Which part needs a model, and which part doesn't</h2>
+<section id="vision" class="tri core">
+  <h2><span class="n">2 · Why AI</span>Which part needs a model, and which part doesn't</h2>
   <p>A banana back is a curve in the lower spine. There are two honest ways to find it in a photo, and only one of them is AI in the sense people mean.</p>
   <table class="vs">
     <tr><th></th><th>pose estimator</th><th>vision-language model</th></tr>
@@ -132,8 +136,8 @@
   </details>
 </section>
 
-<section id="tradeoffs" class="tri">
-  <h2><span class="n">3 · THE TRADE-OFFS</span>Decisions, and what they cost</h2>
+<section id="tradeoffs" class="tri core">
+  <h2><span class="n">3 · The trade-offs</span>Decisions, and what they cost</h2>
   <p>Each row is a choice, the alternative I turned down, and why. The alternatives aren't wrong, just wrong at this scale.</p>
   <table>
     <tr><th>decision</th><th>chose</th><th>instead of</th><th>why</th></tr>
@@ -148,8 +152,8 @@
   </table>
 </section>
 
-<section id="solution" class="tri">
-  <h2><span class="n">4 · HOW IT'S BUILT</span>Two model calls, one fixed test set, one loop</h2>
+<section id="solution" class="tri core">
+  <h2><span class="n">4 · The solution</span>Two model calls, one fixed test set, one loop</h2>
   <p>One upload triggers up to two calls to OpenAI's chat-completions API, both with the photo attached.</p>
   <ol>
     <li><b>Classifier.</b> Temperature 0, five output tokens, two text-only examples, told to answer exactly "good form" or "banana back". The app checks for the word "banana" or "good"; anything else is shown raw as "unclear".</li>
@@ -190,7 +194,7 @@
 
 <section id="v2" class="tri">
   <div class="vtag">v2 <span>8 Sep 2026 · test set and labels</span></div>
-  <h2><span class="n">5 · THE TEST SET</span>Building something to measure against</h2>
+  <h2><span class="n">5 · The test set</span>Building something to measure against</h2>
   <figure class="wide"><img src="{{ url_for('static', filename='how-its-built/testset-sheet.jpg') }}" alt="Contact sheet of the 54-photo test set"><figcaption>All {{ c.n if c else 54 }} photos. Yellow outline: AI-generated. Grey outline: degraded copy of a photo already in the set. "ctl": not a handstand.</figcaption></figure>
   {% if c %}
   <p>{{ c.n }} photos, {{ c.hs }} handstands and {{ c.ctl }} controls, chosen before I looked at any model output, along axes I knew mattered from teaching handstands. The set is built to cover the edges, not the average upload.</p>
@@ -221,7 +225,7 @@
 
 <section id="v0" class="tri">
   <div class="vtag">v0 <span>September 2025 · original build, measured 8 Sep 2026</span></div>
-  <h2><span class="n">6 · RESULTS</span>The first draft, measured anyway</h2>
+  <h2><span class="n">6 · Results</span>The first draft, measured anyway</h2>
   <p>This is the site as first built: a free-text prompt, a string match on the answer, no schema, no logging. A bad baseline beats no baseline, because every later version is judged on the same photos.</p>
   <figure><img src="{{ url_for('static', filename='how-its-built/v0-result.jpg') }}" alt="A v0 result: Banana Alert card with AI coaching text"><figcaption>A healthy v0 result card, 8 Sep 2026. The prompts are in the collapsible above.</figcaption></figure>
   {% if v %}
@@ -284,7 +288,7 @@
 </section>
 
 <section id="takeaways" class="tri">
-  <h2><span class="n">7 · WHAT I TOOK AWAY</span>Five things I'd carry into any AI build</h2>
+  <h2><span class="n">7 · What I took away</span>Five things I'd carry into any AI build</h2>
   <ol>
     <li><b>Measure before you improve; the eval reorders the roadmap.</b> Before the numbers, the next step was a better prompt. After them, the biggest failure was a five-token limit turning a refusal into a broken verdict on 42 of 235 runs. A schema fixes that; prompt tuning doesn't. The eval cost $1.24.</li>
     <li><b>The label is a design decision with its own error bar.</b> Two careful labellers agreed on 66% of photos. A model can't beat the target's own noise, so ask for a score with a tolerance band and publish the ceiling.</li>
@@ -295,7 +299,7 @@
 </section>
 
 <section id="next" class="tri">
-  <h2><span class="n">8 · NEXT</span>What the eval says to change, in order</h2>
+  <h2><span class="n">8 · Next</span>What the eval says to change, in order</h2>
   <p>Each item is tied to a row in the failure table and gets checked on the same photos.</p>
   <ol>
     <li><b>Give the model a way out</b> (v1). A <code>photo_usable</code> flag and a <code>view</code> field, required by a JSON schema. The largest failure row goes to zero by construction.</li>
