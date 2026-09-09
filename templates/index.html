@@ -7,13 +7,18 @@
 </div>
 {% endif %}
 <h1>🍌 Are You Going Bananas? 🍌</h1>
-<p style="text-align: center; color: #666; margin-bottom: 14px;">
-    The Banana Handstand Detector
-</p>
-<figure class="example">
-    <img src="{{ url_for('static', filename='handstand_demo.jpg') }}" alt="Two cartoon handstands: an arched banana back marked with a cross, a straight one marked with a tick">
-    <figcaption>Banana back (left) vs good form (right)</figcaption>
-</figure>
+<p class="tagline">Upload a handstand photo. An AI tells you if you've got a banana back, and how to fix it.</p>
+<section class="explainer" aria-label="How it works">
+    <figure class="example">
+        <img src="{{ url_for('static', filename='handstand_demo.jpg') }}" alt="Two cartoon handstands: an arched banana back marked with a cross, a straight one marked with a tick">
+        <figcaption>Banana back (left) vs good form (right)</figcaption>
+    </figure>
+    <ol class="steps-v">
+        <li><span aria-hidden="true">🤸</span><div><b>Do a handstand</b><small>freestanding or wall, photographed from the side</small></div></li>
+        <li><span aria-hidden="true">📸</span><div><b>Upload the photo</b><small>whole body in frame</small></div></li>
+        <li><span aria-hidden="true">🍌</span><div><b>Get your banana score</b><small>good form or banana back, plus a coaching note</small></div></li>
+    </ol>
+</section>
 
 <form action="/upload" method="post" enctype="multipart/form-data" id="uploadForm">
     <div class="upload-container">
@@ -52,14 +57,6 @@
     </div>
 </div>
 {% endif %}
-
-<section class="steps" aria-label="How it works">
-    <div class="step"><span>🤸</span><b>Do a handstand</b><small>freestanding or wall, side view</small></div>
-    <div class="arrow" aria-hidden="true">→</div>
-    <div class="step"><span>📸</span><b>Upload the photo</b><small>whole body in frame</small></div>
-    <div class="arrow" aria-hidden="true">→</div>
-    <div class="step"><span>🍌</span><b>Get your banana score</b><small>plus a coaching note</small></div>
-</section>
 
 <p class="privacy-note">🔒 Your photo is sent to OpenAI for analysis and auto-deleted from our server within 24 hours — never shared, never sold.</p>
 

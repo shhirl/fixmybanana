@@ -315,12 +315,15 @@
         .photo-credit a { color: #6b7280; }
         .case-card { display: grid; grid-template-columns: 150px 1fr; gap: 18px; align-items: center; margin: 26px 0 0; padding: 16px 18px; background: #f4f1ff; border: 1px solid #e0d9ff; border-radius: 12px; text-align: left; }
         .case-thumb img { width: 150px; border-radius: 8px; display: block; border: 1px solid #e0d9ff; }
-        .steps { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 26px 0 6px; padding: 16px 12px; background: #f6f7fb; border-radius: 12px; }
-        .step { flex: 1; text-align: center; font-size: 13px; color: #6b7280; line-height: 1.35; }
-        .step span { display: block; font-size: 26px; margin-bottom: 4px; }
-        .step b { display: block; color: #1f2330; font-size: 14px; margin-bottom: 2px; }
-        .arrow { color: #c7c9d6; font-size: 20px; }
-        @media (max-width: 560px) { .steps { flex-direction: column; } .arrow { transform: rotate(90deg); } }
+        .tagline { text-align: center; color: #4b5563; font-size: 17px; max-width: 520px; margin: -6px auto 22px; line-height: 1.45; }
+        .explainer { display: grid; grid-template-columns: 300px 1fr; gap: 22px; align-items: center; margin: 0 0 26px; padding: 16px 18px; background: #f6f7fb; border-radius: 12px; }
+        .explainer .example { margin: 0; max-width: none; }
+        .steps-v { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+        .steps-v li { display: flex; gap: 12px; align-items: flex-start; }
+        .steps-v span { font-size: 24px; line-height: 1; width: 32px; text-align: center; flex: none; }
+        .steps-v b { display: block; color: #1f2330; font-size: 14.5px; }
+        .steps-v small { display: block; color: #6b7280; font-size: 13px; line-height: 1.35; }
+        @media (max-width: 600px) { .explainer { grid-template-columns: 1fr; } }
         .case-card h3 { margin: 0 0 6px; font-size: 17px; color: #1f2330; }
         .case-card p { margin: 0 0 12px; font-size: 14px; color: #4b5563; line-height: 1.5; }
         .case-btn { display: inline-block; background: #5a34e6; color: #fff; text-decoration: none; font-weight: 600; font-size: 14px; padding: 9px 16px; border-radius: 8px; }
