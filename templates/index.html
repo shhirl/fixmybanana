@@ -53,6 +53,16 @@
 </div>
 {% endif %}
 
+<section class="steps" aria-label="How it works">
+    <div class="step"><span>🤸</span><b>Do a handstand</b><small>freestanding or wall, side view</small></div>
+    <div class="arrow" aria-hidden="true">→</div>
+    <div class="step"><span>📸</span><b>Upload the photo</b><small>whole body in frame</small></div>
+    <div class="arrow" aria-hidden="true">→</div>
+    <div class="step"><span>🍌</span><b>Get your banana score</b><small>plus a coaching note</small></div>
+</section>
+
+<p class="privacy-note">🔒 Your photo is sent to OpenAI for analysis and auto-deleted from our server within 24 hours — never shared, never sold.</p>
+
 <aside class="case-card">
     <a class="case-thumb" href="{{ url_for('how_its_built') }}"><img src="{{ url_for('static', filename='how-its-built/testset-sheet.jpg') }}" alt="Contact sheet of the hand-labelled test set"></a>
     <div>
@@ -62,19 +72,7 @@
     </div>
 </aside>
 
-<p class="privacy-note">🔒 Your photo is sent to OpenAI for analysis and auto-deleted from our server within 24 hours — never shared, never sold.</p>
 
-<div style="margin-top: 40px; padding: 20px; background-color: #e9f7ef; border-radius: 8px;">
-    <h3>How It Works</h3>
-    <ol>
-        <li><strong>Do a handstand</strong> - Freestanding or wall-assisted, and take a picture</li>
-        <li><strong>Upload your photo</strong> - Our AI analyzes your form</li>
-        <li><strong>Get your rating</strong> - See where you land on the banana scale</li>
-    </ol>
-    <p style="margin-top: 20px;">
-        💡 <strong>For the most accurate rating:</strong> Good lighting and a clear background help our AI give you the best analysis. Side view works best; make sure your whole body is visible
-    </p>
-</div>
 
 <section class="feedback-section" id="feedback">
     <h2>Loved it? Got ideas? 🍌</h2>
@@ -89,11 +87,12 @@
         <textarea
             id="feedback-message"
             name="message"
-            rows="5"
+            rows="3"
             maxlength="5000"
             placeholder="What's on your mind?"
             required
         ></textarea>
+        <div class="fb-row">
         <label for="feedback-email" class="visually-hidden">Your email</label>
         <input
             id="feedback-email"
@@ -103,6 +102,7 @@
             required
         />
         <button type="submit">Send it</button>
+        </div>
     </form>
 </section>
 {% endblock %}
