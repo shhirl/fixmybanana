@@ -38,6 +38,17 @@
     </div>
 </form>
 
+{% if samples %}
+<div class="samples">
+    <p class="samples-title">No photo handy? Try a sample:</p>
+    <div class="samples-row">
+        {% for s in samples %}
+        <a class="sample" href="{{ url_for('sample_result', sample_id=s.id) }}"><img src="{{ url_for('sample_photo', sample_id=s.id) }}" alt="{{ s.title }}"><span>{{ s.title }}</span></a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
 <p class="privacy-note">🔒 Your photo is sent to OpenAI for analysis and auto-deleted from our server within 24 hours — never shared, never sold.</p>
 
 <div style="margin-top: 40px; padding: 20px; background-color: #e9f7ef; border-radius: 8px;">

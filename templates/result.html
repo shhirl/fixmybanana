@@ -35,13 +35,22 @@
 <p class="eval-line">Evaluated on {{ eval_summary.n_photos }} photos · agrees with my label {{ eval_summary.majority_pct }}% of the time · <a href="{{ url_for('how_its_built') }}#v0">see how</a></p>
 {% endif %}
 
+{% if sample %}
+<div style="text-align: center; margin: 30px 0;">
+    <h3 style="color: #333; margin-bottom: 15px;">📸 Sample photo</h3>
+    <img id="resultPhoto" src="{{ url_for('sample_photo', sample_id=sample.id) }}" alt="{{ sample.title }}" style="max-width: 100%; max-height: 400px; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: 3px solid #ddd;">
+    <p class="sample-note">Recorded result, not a live call: run {{ sample.run }} of the {{ sample.eval_version }} eval on {{ sample.recorded_at[:10] }} ({{ sample.model }}, {{ sample.latency_s }} s). My own label for this photo: {{ sample.shirley_label }}, {{ sample.shirley_score }}/10. <a href="/">Upload your own</a> for a live one.</p>
+    <p class="photo-credit">Photo: <a href="{{ sample.source_url }}" target="_blank" rel="noopener">{{ sample.credit }}</a></p>
+</div>
+{% else %}
 <!-- Display the user's uploaded image -->
 <div style="text-align: center; margin: 30px 0;">
     <h3 style="color: #333; margin-bottom: 15px;">📸 Your Handstand Photo</h3>
     <img id="resultPhoto" src="{{ url_for('uploaded_file', filename=uploaded_image) }}" alt="Your uploaded handstand" style="max-width: 100%; max-height: 400px; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: 3px solid #ddd;">
 </div>
+{% endif %}
 
-{% if form_quality in ['good', 'bad'] %}
+{% if form_quality in ['good', 'bad'] and not sample %}
 <div class="share-section">
     <p class="share-title">📣 Share your banana score</p>
     <div class="share-buttons">
@@ -66,7 +75,7 @@
 
 
 <form action="/" method="get">
-    <button type="submit" class="back-btn">📷 Analyze Another Photo</button>
+    <button type="submit" class="back-btn">{% if sample %}📷 Analyze Your Own Photo{% else %}📷 Analyze Another Photo{% endif %}</button>
 </form>
 <script>
     // Ensure the background persists on the result page
