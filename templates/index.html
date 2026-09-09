@@ -7,9 +7,13 @@
 </div>
 {% endif %}
 <h1>🍌 Are You Going Bananas? 🍌</h1>
-<p style="text-align: center; color: #666; margin-bottom: 30px;">
+<p style="text-align: center; color: #666; margin-bottom: 14px;">
     The Banana Handstand Detector
 </p>
+<figure class="example">
+    <img src="{{ url_for('static', filename='handstand_demo.jpg') }}" alt="Two cartoon handstands: an arched banana back marked with a cross, a straight one marked with a tick">
+    <figcaption>Banana back (left) vs good form (right)</figcaption>
+</figure>
 
 <form action="/upload" method="post" enctype="multipart/form-data" id="uploadForm">
     <div class="upload-container">
